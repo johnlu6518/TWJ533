@@ -36,6 +36,7 @@
 #define COLOR_RED_ALPHA(x) nvgRGBA(201, 34, 49, x)
 #define COLOR_YELLOW nvgRGBA(218, 202, 37, 255)
 #define COLOR_RED nvgRGBA(201, 34, 49, 255)
+#define COLOR_YELLOW_APPHA(x) nvgRGBA(218, 202, 37, x)
 
 #define UI_BUF_COUNT 4
 
@@ -90,6 +91,11 @@ typedef struct {
   int cnt;
 } line_vertices_data;
 
+//Pon 20210407 Add HUD UI
+typedef struct UIExtend {
+  int blinker_blinkingrate;
+} UIExtend;
+
 typedef struct UIScene {
 
   mat3 view_from_calib;
@@ -131,6 +137,9 @@ typedef struct UIScene {
   float light_sensor, accel_sensor, gyro_sensor;
   bool started, ignition, is_metric, longitudinal_control, end_to_end;
   uint64_t started_frame;
+
+  //Pon 20210407 Add HUD UI
+  UIExtend ui_extend;
 } UIScene;
 
 typedef struct UIState {
