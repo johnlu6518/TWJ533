@@ -81,17 +81,26 @@ OffroadHome::OffroadHome(QWidget* parent) : QWidget(parent) {
 
   date = new QLabel();
   date->setStyleSheet(R"(font-size: 55px;)");
+//Pon 20210407 Disable header info on the home screen
+#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(date, 0, Qt::AlignHCenter | Qt::AlignLeft);
+#endif
 
   alert_notification = new QPushButton();
   alert_notification->setVisible(false);
   QObject::connect(alert_notification, SIGNAL(released()), this, SLOT(openAlerts()));
+//Pon 20210407 Disable header info on the home screen
+#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(alert_notification, 0, Qt::AlignHCenter | Qt::AlignRight);
+#endif
 
   std::string brand = Params().read_db_bool("Passive") ? "dashcam" : "openpilot";
   QLabel* version = new QLabel(QString::fromStdString(brand + " v" + Params().get("Version")));
   version->setStyleSheet(R"(font-size: 55px;)");
+//Pon 20210407 Disable header info on the home screen
+#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(version, 0, Qt::AlignHCenter | Qt::AlignRight);
+#endif
 
   main_layout->addLayout(header_layout);
 
