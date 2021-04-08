@@ -4,7 +4,7 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine
-from selfdrive.car.volkswagen.values import DBC, CANBUS, TransmissionType, GearShifter, BUTTON_STATES, CarControllerParams
+from selfdrive.car.volkswagen.values import DBC, CANBUS, TransmissionType, GearShifter, BUTTON_STATES, CarControllerParams, NetworkLocation
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -235,6 +235,13 @@ class CarState(CarStateBase):
                   ("BCM1_Rueckfahrlicht_Schalter", "Gateway_72", 0)]  # Reverse light from BCM
       checks += [("Motor_14", 10)]  # From J623 Engine control module
 
+    #PONTEST
+    if CP.networkLocation == NetworkLocation.fwdCamera:
+      # Extended CAN devices other than the camera are here on CANBUS.pt
+      # TODO: Add bsm checks[] when we have solid autodetection
+      signals += MqbExtraSignals.acc_radar[0] + MqbExtraSignals.bsm[0]
+      checks += MqbExtraSignals.acc_radar[1]
+
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, CANBUS.pt)
 
   # A single signal is monitored from the camera CAN bus, and then ignored,
@@ -253,4 +260,41 @@ class CarState(CarStateBase):
       ("LDW_02", 10)        # From R242 Driver assistance camera
     ]
 
+    #PONTEST
+    if CP.networkLocation == NetworkLocation.gateway:
+      # Extended CAN devices other than the camera are here on CANBUS.cam
+      # TODO: Add bsm checks[] when we have solid autodetection
+      signals += MqbExtraSignals.acc_radar[0] + MqbExtraSignals.bsm[0]
+      checks += MqbExtraSignals.acc_radar[1]
+
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, CANBUS.cam)
+
+#PONTEST
+class MqbExtraSignals:
+  # Additional signal and message lists to dynamically add for optional or bus-portable controllers
+  acc_radar = ([
+    ("ACC_Wunschgeschw", "ACC_02", 0),              # ACC set speed
+    ("AWV2_Freigabe", "ACC_10", 0),                 # FCW brake jerk release
+    ("ANB_Teilbremsung_Freigabe", "ACC_10", 0),     # AEB partial braking release
+    ("ANB_Zielbremsung_Freigabe", "ACC_10", 0),     # AEB target braking release
+  ], [
+    ("ACC_10", 50),                                 # From J428 ACC radar control module
+    ("ACC_02", 17),                                 # From J428 ACC radar control module
+  ])
+  lkas_camera = ([
+    ("LDW_SW_Warnung_links", "LDW_02", 0),          # Blind spot in warning mode on left side due to lane departure
+    ("LDW_SW_Warnung_rechts", "LDW_02", 0),         # Blind spot in warning mode on right side due to lane departure
+    ("LDW_Seite_DLCTLC", "LDW_02", 0),              # Direction of most likely lane departure (left or right)
+    ("LDW_DLC", "LDW_02", 0),                       # Lane departure, distance to line crossing
+    ("LDW_TLC", "LDW_02", 0),                       # Lane departure, time to line crossing
+  ], [
+    ("LDW_02", 10),                                 # From R242 Driver assistance camera
+  ])
+  bsm = ([
+    ("SWA_Infostufe_SWA_li", "SWA_01", 0),          # Blind spot object info, left
+    ("SWA_Warnung_SWA_li", "SWA_01", 0),            # Blind spot object warning, left
+    ("SWA_Infostufe_SWA_re", "SWA_01", 0),          # Blind spot object info, right
+    ("SWA_Warnung_SWA_re", "SWA_01", 0),            # Blind spot object warning, right
+  ], [
+    ("SWA_01", 20),                                 # From J1086 Lane Change Assist
+  ])

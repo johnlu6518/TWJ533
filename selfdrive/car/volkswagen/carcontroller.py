@@ -1,7 +1,7 @@
 from cereal import car
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.volkswagen import volkswagencan
-from selfdrive.car.volkswagen.values import DBC, CANBUS, MQB_LDW_MESSAGES, BUTTON_STATES, CarControllerParams
+from selfdrive.car.volkswagen.values import DBC, CANBUS, MQB_LDW_MESSAGES, BUTTON_STATES, CarControllerParams, NetworkLocation
 from opendbc.can.packer import CANPacker
 
 
@@ -17,6 +17,11 @@ class CarController():
     self.graMsgSentCount = 0
     self.graMsgStartFramePrev = 0
     self.graMsgBusCounterPrev = 0
+
+    if CP.networkLocation == NetworkLocation.fwdCamera:
+      self.ext_can = CANBUS.pt
+    else:
+      self.ext_can = CANBUS.cam
 
     self.steer_rate_limited = False
 
