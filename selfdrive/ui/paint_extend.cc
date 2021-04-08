@@ -93,9 +93,9 @@ void ui_draw_top_hud_infobox1(UIState *s) {
   sidebar_fit_x = s->viz_rect.x + hud_top_1_x;
 
   //value
-  snprintf(value, sizeof(value), "%.2f°",(s->scene.accel_sensor));
+  snprintf(value, sizeof(value), "%.2f°", s->scene.car_control.getActuators().getGas());
   ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_1_y, hud_top_1_w, hud_top_1_h,
-                        "G Sensor", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "OP Gas", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
@@ -108,9 +108,9 @@ void ui_draw_top_hud_infobox2(UIState *s) {
   sidebar_fit_x = s->viz_rect.x + hud_top_2_x;
 
   //value
-  snprintf(value, sizeof(value), "%.2f°",(s->scene.gyro_sensor));
+  snprintf(value, sizeof(value), "%.2f°",(s->scene.car_control.getActuators().getBrake()));
   ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_2_y, hud_top_2_w, hud_top_2_h,
-                        "Gryo Sensor", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "OP Brake", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
@@ -119,26 +119,22 @@ void ui_draw_top_hud_infobox3(UIState *s) {
   char value[16];
 
   //value
-  snprintf(value, sizeof(value), "%.0f°",(s->scene.light_sensor));
+  snprintf(value, sizeof(value), "%.0f°",(s->scene.car_control.getActuators().getSteer()));
   ui_draw_hud_infobox(s, hud_top_3_x, hud_top_3_y, hud_top_3_w, hud_top_3_h,
-                        "Light Sensor", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "OP Steer", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
 
 void ui_draw_top_hud_infobox4(UIState *s) {
-  if(s->scene.car_state.getSteeringPressed()) {
-      ui_draw_hud_infobox(s, hud_top_4_x, hud_top_4_y, hud_top_4_w, hud_top_4_h,
-                        "Steer Press", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "User", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+   char value[16];
 
-  } else {
-      ui_draw_hud_infobox(s, hud_top_4_x, hud_top_4_y, hud_top_4_w, hud_top_4_h,
-                        "Steer Press", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "none", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
+  //value
+  snprintf(value, sizeof(value), "%.0f°",(s->scene.car_control.getActuators().getSteeringAngleDeg()));
+  ui_draw_hud_infobox(s, hud_top_4_x, hud_top_4_y, hud_top_4_w, hud_top_4_h,
+                        "OP SteerAngle", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
-  }
 }
 
 
@@ -212,28 +208,32 @@ void ui_draw_left_hud(UIState *s) {
 }
 
 void ui_draw_right_hud_infobox1(UIState *s) {
-  if(s->scene.car_state.getGasPressed()) {
+  if(s->scene.car_state.getSteeringPressed()) {
       ui_draw_hud_infobox(s, hud_right_1_x, hud_right_1_y, hud_right_1_w, hud_right_1_h,
-                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "Pressed", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+                        "Steer Press", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "User", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+
   } else {
       ui_draw_hud_infobox(s, hud_right_1_x, hud_right_1_y, hud_right_1_w, hud_right_1_h,
-                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "Steer Press", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "none", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
   }
 }
 
 void ui_draw_right_hud_infobox2(UIState *s) {
-  char value[16];
-
-  //value
-  snprintf(value, sizeof(value), "%.2f°",(s->scene.car_state.getBrake()));
-  ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                        "Brake Pressure", 30, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "Mbar", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+  if(s->scene.car_state.getGasPressed()) {
+      ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
+                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "Pressed", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+  } else {
+      ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
+                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "none", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+  }
 }
 
 void ui_draw_right_hud(UIState *s) {
@@ -256,8 +256,11 @@ void ui_draw_infobar(UIState *s) {
   struct tm timeinfo;
   localtime_r(&rawtime, &timeinfo);
   strftime(date_time, sizeof(date_time),"%D %T", &timeinfo);
-  snprintf(infobar, sizeof(infobar), "%s", date_time);
+  //snprintf(infobar, sizeof(infobar), "%s", date_time);
   //snprintf(infobar, sizeof(infobar), "%s/Gas:%.2f/Barke:%.2f/Steer:%.2f/SteerAngle:%.2f", date_time, s->);
+  snprintf(infobar, sizeof(infobar), "%s/UserBrake:%.2f/SteeringAngleDesiredDeg:%.2f", date_time, s->scene.car_state.getBrake() , s->scene.controls_state.getSteeringAngleDesiredDeg());
+
+
 
   nvgBeginPath(s->vg);
   nvgRect(s->vg, x, y, w, hud_infobar_h);
