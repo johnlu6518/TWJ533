@@ -9,6 +9,7 @@
 #include "nanovg_gl.h"
 #include "nanovg_gl_utils.h"
 #include "paint.hpp"
+#include "paint_extend.hpp"
 #include "sidebar.hpp"
 
 // TODO: this is also hardcoded in common/transformations/camera.py
@@ -283,6 +284,8 @@ static void ui_draw_vision_header(UIState *s) {
   ui_draw_vision_maxspeed(s);
   ui_draw_vision_speed(s);
   ui_draw_vision_event(s);
+  //PONTEST
+  ui_draw_hud(s);
 }
 
 static void ui_draw_vision_footer(UIState *s) {
