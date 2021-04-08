@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+#include <QComboBox>
 
 #ifndef QCOM
 #include "networking.hpp"
@@ -13,9 +14,61 @@
 #include "widgets/controls.hpp"
 #include "widgets/ssh_keys.hpp"
 #include "common/params.h"
+#include "common/swaglog.h"
 #include "common/util.h"
 #include "selfdrive/hardware/hw.h"
 
+//PONTEST
+QWidget * vag_panel() {
+  QVBoxLayout *vag_list = new QVBoxLayout();
+  vag_list->setSpacing(30);
+  ParamControl* paramControlIsVagInfoboxEnabled = new ParamControl("IsVagInfoboxEnabled",
+                                            "Enable Info Box",
+                                            "Show info box on the view screen",
+                                            ""
+                                              );
+  vag_list->addWidget(paramControlIsVagInfoboxEnabled);
+
+  QComboBox* comboBoxLeftHud1 = new QComboBox();
+  comboBoxLeftHud1->addItem("ABC", 0);
+  comboBoxLeftHud1->addItem("BBC", 1);
+  comboBoxLeftHud1->addItem("CBD", 2);
+  comboBoxLeftHud1->setStyleSheet(R"(
+    QComboBox {
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 1px 18px 1px 3px;
+        min-width: 6em;
+    }
+  )");
+  vag_list->addWidget(comboBoxLeftHud1);
+
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ParamControl("IsVagInfobarEnabled",
+                                            "Enable Infobar",
+                                            "Show infobar on the view screen",
+                                            ""
+                                              ));
+
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ParamControl("IsVagBlinkerEnabled",
+                                            "Enable Blinker",
+                                            "Show blinker on the view screen",
+                                            ""
+                                            ));
+
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ParamControl("IsVagBlindspotEnabled",
+                                            "Enable Blindspot",
+                                            "Show blindspot on the view screen",
+                                            ""
+                                            ));
+
+  vag_list->addStretch(0);
+  QWidget *widget = new QWidget;
+  widget->setLayout(vag_list);
+  return widget;
+}
 
 QWidget * toggles_panel() {
   QVBoxLayout *toggles_list = new QVBoxLayout();
@@ -244,6 +297,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {"Network", network_panel(this)},
     {"Toggles", toggles_panel()},
     {"Developer", new DeveloperPanel()},
+    {"VAG", vag_panel()},
   };
 
   sidebar_layout->addSpacing(45);
@@ -258,8 +312,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
         background: none;
         font-size: 65px;
         font-weight: 500;
-        padding-top: 35px;
-        padding-bottom: 35px;
+        font-height: 100;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
       QPushButton:checked {
         color: white;

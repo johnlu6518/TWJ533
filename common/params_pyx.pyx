@@ -83,6 +83,11 @@ keys = {
   b"Offroad_UpdateFailed": [TxType.CLEAR_ON_MANAGER_START],
   b"Offroad_HardwareUnsupported": [TxType.CLEAR_ON_MANAGER_START],
   b"ForcePowerDown": [TxType.CLEAR_ON_MANAGER_START],
+  #PONTEST
+  b"IsVagInfoboxEnabled": [TxType.PERSISTENT],
+  b"IsVagInfobarEnabled": [TxType.PERSISTENT],
+  b"IsVagBlinkerEnabled": [TxType.PERSISTENT],
+  b"IsVagBlindspotEnabled": [TxType.PERSISTENT],
 }
 
 def ensure_bytes(v):
