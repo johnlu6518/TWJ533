@@ -18,7 +18,6 @@
 
 #include "home.hpp"
 #include "paint.hpp"
-#include "paint_extend.hpp"
 #include "qt_window.hpp"
 #include "widgets/drive_stats.hpp"
 #include "widgets/setup.hpp"
@@ -100,7 +99,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QWidget(parent) {
   center_layout = new QStackedLayout();
 
   QHBoxLayout* statsAndSetup = new QHBoxLayout();
-#if (!UI_DEVELOP_IN_SIDEBAR)
+
   DriveStats* drive = new DriveStats;
   drive->setFixedSize(800, 800);
   statsAndSetup->addWidget(drive);
@@ -108,7 +107,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QWidget(parent) {
   SetupWidget* setup = new SetupWidget;
   //setup->setFixedSize(700, 700);
   statsAndSetup->addWidget(setup);
-#endif
+
   QWidget* statsAndSetupWidget = new QWidget();
   statsAndSetupWidget->setLayout(statsAndSetup);
 
