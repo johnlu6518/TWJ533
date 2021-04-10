@@ -46,7 +46,7 @@ class CarInterface(CarInterfaceBase):
         ret.transmissionType = TransmissionType.manual
       cloudlog.info("Detected transmission type: %s", ret.transmissionType)
 
-      if True: #0xfd in fingerprint[1]:  # ESP_21 present on bus 1, we're hooked up at the CAN gateway
+      if 0xfd in fingerprint[1]:  #True:  ESP_21 present on bus 1, we're hooked up at the CAN gateway
         ret.networkLocation = NetworkLocation.gateway
       else:  # We're hooked up at the LKAS camera
         ret.networkLocation = NetworkLocation.fwdCamera
