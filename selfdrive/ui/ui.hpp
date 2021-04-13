@@ -95,7 +95,7 @@ typedef struct {
   int cnt;
 } line_vertices_data;
 
-//PONTEST
+//Pon 20210407 Add HUD UI
 typedef struct UIExtend {
   int blinker_blinkingrate;
 } UIExtend;
@@ -120,6 +120,8 @@ typedef struct UIScene {
   cereal::DeviceState::Reader deviceState;
   cereal::RadarState::LeadData::Reader lead_data[2];
   cereal::CarState::Reader car_state;
+  cereal::CarParams::Reader car_params;
+  cereal::CarControl::Reader car_control;
   cereal::ControlsState::Reader controls_state;
   cereal::DriverState::Reader driver_state;
   cereal::DriverMonitoringState::Reader dmonitoring_state;
@@ -142,7 +144,7 @@ typedef struct UIScene {
   bool started, ignition, is_metric, longitudinal_control, end_to_end;
   uint64_t started_frame;
 
-  //PONTEST
+  //Pon 20210407 Add HUD UI
   UIExtend ui_extend;
 } UIScene;
 

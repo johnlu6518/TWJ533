@@ -1,7 +1,7 @@
 #pragma once
 #include "ui.hpp"
 
-#define UI_DEVELOP_IN_SIDEBAR 0
+#define UI_DEVELOP_IN_SIDEBAR 1
 
 //Pon 20210312 Add HUD UI
 const int hud_infobar_h = 80;
@@ -47,17 +47,6 @@ const int hud_right_2_x = 1650;
 const int hud_right_2_y = 500;
 const int hud_right_2_w = 180;
 const int hud_right_2_h = 180;
-
-
-const int steering_angle_degree_x = 60;
-const int steering_angle_degree_y = 500;
-const int steering_angle_degree_w = 180;
-const int steering_angle_degree_h = 180;
-
-const int radar_distance_x = 1650;
-const int radar_distance_y = 500;
-const int radar_distance_w = 180;
-const int radar_distance_h = 180;
 
 void ui_draw_hud(UIState *s);
 

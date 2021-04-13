@@ -401,6 +401,9 @@ void ui_draw(UIState *s) {
   }
   nvgEndFrame(s->vg);
   glDisable(GL_BLEND);
+  
+  //PONTEST
+  ui_draw_hud(s);
 }
 
 void ui_draw_image(const UIState *s, const Rect &r, const char *name, float alpha) {
