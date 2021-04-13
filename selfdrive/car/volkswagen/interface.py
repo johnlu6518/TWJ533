@@ -1,6 +1,6 @@
 from cereal import car
 from selfdrive.swaglog import cloudlog
-from selfdrive.car.volkswagen.values import CAR, BUTTON_STATES, TransmissionType, GearShifter, NetworkLocation
+from selfdrive.car.volkswagen.values import CAR, BUTTON_STATES, NetworkLocation, TransmissionType, GearShifter
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase
 
@@ -137,7 +137,7 @@ class CarInterface(CarInterfaceBase):
     self.cp.update_strings(can_strings)
     self.cp_cam.update_strings(can_strings)
 
-    ret = self.CS.update(self.cp, self.CP.transmissionType)
+    ret = self.CS.update(self.cp, self.cp_cam, self.cp_ext, self.CP.transmissionType)
     ret.canValid = self.cp.can_valid and self.cp_cam.can_valid
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 

@@ -4,7 +4,7 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine
-from selfdrive.car.volkswagen.values import DBC, CANBUS, TransmissionType, GearShifter, BUTTON_STATES, CarControllerParams, NetworkLocation
+from selfdrive.car.volkswagen.values import DBC, CANBUS, NetworkLocation, TransmissionType, GearShifter, BUTTON_STATES, CarControllerParams
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -16,7 +16,7 @@ class CarState(CarStateBase):
       self.shifter_values = can_define.dv["EV_Gearshift"]['GearPosition']
     self.buttonStates = BUTTON_STATES.copy()
 
-  def update(self, pt_cp, trans_type):
+  def update(self, pt_cp, cam_cp, ext_cp, trans_type):
     ret = car.CarState.new_message()
     # Update vehicle speed and acceleration from ABS wheel speeds.
     ret.wheelSpeeds.fl = pt_cp.vl["ESP_19"]['ESP_VL_Radgeschw_02'] * CV.KPH_TO_MS
@@ -27,7 +27,9 @@ class CarState(CarStateBase):
     ret.vEgoRaw = float(np.mean([ret.wheelSpeeds.fl, ret.wheelSpeeds.fr, ret.wheelSpeeds.rl, ret.wheelSpeeds.rr]))
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
 
-    ret.standstill = ret.vEgoRaw < 0.1
+    #ret.standstill = ret.vEgoRaw < 0.1
+    ret.standstill = bool(pt_cp.vl["ESP_21"]['ESP_Haltebestaetigung']) and ret.vEgoRaw < 0.001
+    
 
     # Update steering angle, rate, yaw rate, and driver input torque. VW send
     # the sign/direction in a separate signal so they must be recombined.
@@ -80,16 +82,24 @@ class CarState(CarStateBase):
     # detection box is dynamic based on speed and road curvature.
     # Refer to VW Self Study Program 890253: Volkswagen Driver Assist Systems,
     # pages 32-35.
-    ret.leftBlindspot = bool(pt_cp.vl["SWA_01"]["SWA_Infostufe_SWA_li"]) or bool(pt_cp.vl["SWA_01"]["SWA_Warnung_SWA_li"])
-    ret.rightBlindspot = bool(pt_cp.vl["SWA_01"]["SWA_Infostufe_SWA_re"]) or bool(pt_cp.vl["SWA_01"]["SWA_Warnung_SWA_re"])
+    ret.leftBlindspot = bool(ext_cp.vl["SWA_01"]["SWA_Infostufe_SWA_li"]) or bool(ext_cp.vl["SWA_01"]["SWA_Warnung_SWA_li"])
+    ret.rightBlindspot = bool(ext_cp.vl["SWA_01"]["SWA_Infostufe_SWA_re"]) or bool(ext_cp.vl["SWA_01"]["SWA_Warnung_SWA_re"])
+
+    # Consume factory LDW data relevant for factory SWA (Lane Change Assist)
+    # and capture it for forwarding to the blind spot radar controller
+    self.ldw_lane_warning_left = bool(cam_cp.vl["LDW_02"]["LDW_SW_Warnung_links"])
+    self.ldw_lane_warning_right = bool(cam_cp.vl["LDW_02"]["LDW_SW_Warnung_rechts"])
+    self.ldw_side_dlc_tlc = bool(cam_cp.vl["LDW_02"]["LDW_Seite_DLCTLC"])
+    self.ldw_dlc = cam_cp.vl["LDW_02"]["LDW_DLC"]
+    self.ldw_tlc = cam_cp.vl["LDW_02"]["LDW_TLC"]
 
     # Stock FCW is considered active if the release bit for brake-jerk warning
     # is set. Stock AEB considered active if the partial braking or target
     # braking release bits are set.
     # Refer to VW Self Study Program 890253: Volkswagen Driver Assistance
     # Systems, chapter on Front Assist with Braking: Golf Family for all MQB
-    ret.stockFcw = bool(pt_cp.vl["ACC_10"]["AWV2_Freigabe"])
-    ret.stockAeb = bool(pt_cp.vl["ACC_10"]["ANB_Teilbremsung_Freigabe"]) or bool(pt_cp.vl["ACC_10"]["ANB_Zielbremsung_Freigabe"])
+    ret.stockFcw = bool(ext_cp.vl["ACC_10"]["AWV2_Freigabe"])
+    ret.stockAeb = bool(ext_cp.vl["ACC_10"]["ANB_Teilbremsung_Freigabe"]) or bool(ext_cp.vl["ACC_10"]["ANB_Zielbremsung_Freigabe"])
 
     # Update ACC radar status.
     accStatus = pt_cp.vl["TSK_06"]['TSK_Status']
@@ -108,7 +118,7 @@ class CarState(CarStateBase):
 
     # Update ACC setpoint. When the setpoint is zero or there's an error, the
     # radar sends a set-speed of ~90.69 m/s / 203mph.
-    ret.cruiseState.speed = pt_cp.vl["ACC_02"]['ACC_Wunschgeschw'] * CV.KPH_TO_MS
+    ret.cruiseState.speed = ext_cp.vl["ACC_02"]['ACC_Wunschgeschw'] * CV.KPH_TO_MS
     if ret.cruiseState.speed > 90:
       ret.cruiseState.speed = 0
 
@@ -176,16 +186,11 @@ class CarState(CarStateBase):
       ("EPS_VZ_Lenkmoment", "LH_EPS_03", 0),        # Driver torque input sign
       ("EPS_HCA_Status", "LH_EPS_03", 0),           # Steering rack HCA support configured
       ("ESP_Tastung_passiv", "ESP_21", 0),          # Stability control disabled
+      ("ESP_Haltebestaetigung", "ESP_21", 0),       # prevents set point creep
       ("KBI_MFA_v_Einheit_02", "Einheiten_01", 0),  # MPH vs KMH speed display
       ("KBI_Handbremse", "Kombi_01", 0),            # Manual handbrake applied
       ("TSK_Status", "TSK_06", 0),                  # ACC engagement status from drivetrain coordinator
       ("TSK_Fahrzeugmasse_02", "Motor_16", 0),      # Estimated vehicle mass from drivetrain coordinator
-      ("ACC_Status_ACC", "ACC_06", 0),              # ACC engagement status
-      ("ACC_Typ", "ACC_06", 0),                     # ACC type (follow to stop, stop&go)
-      ("ACC_Wunschgeschw", "ACC_02", 0),            # ACC set speed
-      ("AWV2_Freigabe", "ACC_10", 0),               # FCW brake jerk release
-      ("ANB_Teilbremsung_Freigabe", "ACC_10", 0),   # AEB partial braking release
-      ("ANB_Zielbremsung_Freigabe", "ACC_10", 0),   # AEB target braking release
       ("GRA_Hauptschalter", "GRA_ACC_01", 0),       # ACC button, on/off
       ("GRA_Abbrechen", "GRA_ACC_01", 0),           # ACC button, cancel
       ("GRA_Tip_Setzen", "GRA_ACC_01", 0),          # ACC button, set
@@ -197,10 +202,6 @@ class CarState(CarStateBase):
       ("GRA_Tip_Stufe_2", "GRA_ACC_01", 0),         # unknown related to stalk type
       ("GRA_ButtonTypeInfo", "GRA_ACC_01", 0),      # unknown related to stalk type
       ("COUNTER", "GRA_ACC_01", 0),                 # GRA_ACC_01 CAN message counter
-      ("SWA_Infostufe_SWA_li", "SWA_01", 0),        # Blind spot object info, left
-      ("SWA_Warnung_SWA_li", "SWA_01", 0),          # Blind spot object warning, left
-      ("SWA_Infostufe_SWA_re", "SWA_01", 0),        # Blind spot object info, right
-      ("SWA_Warnung_SWA_re", "SWA_01", 0),          # Blind spot object warning, right
     ]
 
     checks = [
@@ -210,12 +211,9 @@ class CarState(CarStateBase):
       ("ESP_19", 100),      # From J104 ABS/ESP controller
       ("ESP_05", 50),       # From J104 ABS/ESP controller
       ("ESP_21", 50),       # From J104 ABS/ESP controller
-      ("ACC_06", 50),       # From J428 ACC radar control module
-      ("ACC_10", 50),       # From J428 ACC radar control module
       ("Motor_20", 50),     # From J623 Engine control module
       ("TSK_06", 50),       # From J623 Engine control module
       ("GRA_ACC_01", 33),   # From J??? steering wheel control buttons
-      ("ACC_02", 17),       # From J428 ACC radar control module
       ("Gateway_72", 10),   # From J533 CAN gateway (aggregated data)
       ("Motor_14", 10),     # From J623 Engine control module
       ("Airbag_02", 5),     # From J234 Airbag control module
@@ -250,15 +248,9 @@ class CarState(CarStateBase):
   @staticmethod
   def get_cam_can_parser(CP):
 
-    signals = [
-      # sig_name, sig_address, default
-      ("LDW_Status_LED_gruen", "LDW_02", 0),            # Lane Assist status LED
-    ]
-
-    checks = [
-      # sig_address, frequency
-      ("LDW_02", 10)        # From R242 Driver assistance camera
-    ]
+    # TODO: Add fwd_camera checks[] when we have solid autodetection
+    signals = MqbExtraSignals.lkas_camera[0]
+    checks = []
 
     #PONTEST
     if CP.networkLocation == NetworkLocation.gateway:
