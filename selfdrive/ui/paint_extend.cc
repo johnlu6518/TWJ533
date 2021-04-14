@@ -4,7 +4,18 @@
 #include <math.h>
 
 
-
+//===== draw text =====
+void ui_draw_hud_text(UIState *s,
+                        const int x,
+                        const int y,
+                        const char* font_string,
+                        const int font_size,
+                        const NVGcolor font_color) {
+  nvgFontSize(s->vg, font_size);
+  nvgFillColor(s->vg, font_color);
+  nvgTextAlign(s->vg, NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+  nvgText(s->vg, x, y, font_string, NULL);
+}
 //===== draw box/title/value/unit =====
 void ui_draw_hud_box(UIState *s,
                     const int x,
@@ -28,7 +39,7 @@ void ui_draw_hud_title(UIState *s,
                         const NVGalign font_algin) {
   nvgFontSize(s->vg, font_size);
   nvgFillColor(s->vg, font_color);
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgTextAlign(s->vg, font_algin);
   nvgText(s->vg, x + w / 2, y + 40, font_string, NULL);
 }
 void ui_draw_hud_value(UIState *s,
@@ -42,7 +53,7 @@ void ui_draw_hud_value(UIState *s,
                         const NVGalign font_algin) {
   nvgFontSize(s->vg, font_size);
   nvgFillColor(s->vg, font_color);
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgTextAlign(s->vg, font_algin);
   nvgText(s->vg, x + w / 2, y + h - 70, font_string, NULL);
 }
 
@@ -57,7 +68,7 @@ void ui_draw_hud_unit(UIState *s,
                         const NVGalign font_algin) {
   nvgFontSize(s->vg, font_size);
   nvgFillColor(s->vg, font_color);
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgTextAlign(s->vg, font_algin);
   nvgText(s->vg, x + w / 2, y + h - 20, font_string, NULL);
 }
 
@@ -288,6 +299,17 @@ void ui_draw_right_hud(UIState *s) {
   ui_draw_right_hud_infobox2(s);
 }
 
+void ui_draw_infotext(UIState *s) {
+  int sidebar_fit_x = 0;
+  char value[256];
+  
+  //Fit sidebar screen
+  sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
+  
+  snprintf(value, sizeof(value), "TEXT TEST %.2f°", s->scene.car_state.getBrake());
+      ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
+}
+
 void ui_draw_infobar(UIState *s) {
   const int x = s->viz_rect.x;
   const int y = s->viz_rect.bottom() - hud_infobar_h;
@@ -383,6 +405,7 @@ void ui_draw_hud(UIState *s) {
   ui_draw_bottom_hud(s);
   ui_draw_left_hud(s);
   ui_draw_right_hud(s);
+  ui_draw_infotext(s);
   ui_draw_infobar(s);
   ui_draw_blindspot(s);
   ui_draw_blinker(s);
