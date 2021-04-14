@@ -32,8 +32,6 @@ NetworkType = log.DeviceState.NetworkType
 NetworkStrength = log.DeviceState.NetworkStrength
 CURRENT_TAU = 15.   # 15s time constant
 CPU_TEMP_TAU = 5.   # 5s time constant
-DAYS_NO_CONNECTIVITY_MAX = 7  # do not allow to engage after a week without internet
-DAYS_NO_CONNECTIVITY_PROMPT = 4  # send an offroad prompt after 4 days with no internet
 DISCONNECT_TIMEOUT = 5.  # wait 5 seconds before going offroad after disconnect so you get an alert
 
 prev_offroad_states: Dict[str, Tuple[bool, Optional[str]]] = {}
@@ -313,15 +311,6 @@ def thermald_thread():
       set_offroad_alert_if_changed("Offroad_ConnectivityNeeded", False)
       set_offroad_alert_if_changed("Offroad_ConnectivityNeededPrompt", False)
       set_offroad_alert_if_changed("Offroad_UpdateFailed", True, extra_text=extra_text)
-    elif dt.days > DAYS_NO_CONNECTIVITY_MAX and update_failed_count > 1:
-      set_offroad_alert_if_changed("Offroad_UpdateFailed", False)
-      set_offroad_alert_if_changed("Offroad_ConnectivityNeededPrompt", False)
-      set_offroad_alert_if_changed("Offroad_ConnectivityNeeded", True)
-    elif dt.days > DAYS_NO_CONNECTIVITY_PROMPT:
-      remaining_time = str(max(DAYS_NO_CONNECTIVITY_MAX - dt.days, 0))
-      set_offroad_alert_if_changed("Offroad_UpdateFailed", False)
-      set_offroad_alert_if_changed("Offroad_ConnectivityNeeded", False)
-      set_offroad_alert_if_changed("Offroad_ConnectivityNeededPrompt", True, extra_text=f"{remaining_time} days.")
     else:
       set_offroad_alert_if_changed("Offroad_UpdateFailed", False)
       set_offroad_alert_if_changed("Offroad_ConnectivityNeeded", False)
