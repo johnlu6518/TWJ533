@@ -88,40 +88,61 @@ void ui_draw_hud_infobox(UIState *s,
 void ui_draw_top_hud_infobox1(UIState *s) {
   int sidebar_fit_x = 0;
   char value[16];
+  NVGcolor value_font_color = COLOR_WHITE_ALPHA(200);
+  float steeringTorque = s->scene.car_state.getSteeringTorque();
 
   //Fit sidebar screen
   sidebar_fit_x = s->viz_rect.x + hud_top_1_x;
 
+  if(((int)(steeringTorque) < -40) || ((int)(steeringTorque) > 40)) {
+    value_font_color = nvgRGBA(255, 188, 3, 200);
+  }
+  if(((int)(steeringTorque) < -80) || ((int)(steeringTorque) > 80)) {
+    value_font_color = nvgRGBA(255, 0, 0, 200);
+  }
+
   //value
-  snprintf(value, sizeof(value), "%.2f°", s->scene.car_control.getActuators().getGas());
+  snprintf(value, sizeof(value), "%.2f°",(steeringTorque));
   ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_1_y, hud_top_1_w, hud_top_1_h,
-                        "OP Gas", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "Steer Torque", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+                        "Nm", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
 
 void ui_draw_top_hud_infobox2(UIState *s) {
   int sidebar_fit_x = 0;
   char value[16];
+  NVGcolor value_font_color = COLOR_WHITE_ALPHA(200);
 
   //Fit sidebar screen
   sidebar_fit_x = s->viz_rect.x + hud_top_2_x;
 
-  //value
-  snprintf(value, sizeof(value), "%.2f°",(s->scene.car_control.getActuators().getBrake()));
-  ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_2_y, hud_top_2_w, hud_top_2_h,
+  if(s->scene.car_control.getActuators().getBrake()>0) {
+    //OP Brake
+    value_font_color = nvgRGBA(255, 0, 0, 200);
+    snprintf(value, sizeof(value), "%.2f°",(s->scene.car_control.getActuators().getBrake()));
+    ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_2_y, hud_top_2_w, hud_top_2_h,
                         "OP Brake", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  } else {
+    //OP Gas
+    value_font_color = nvgRGBA(255, 188, 3, 200);
+    snprintf(value, sizeof(value), "%.2f°",(s->scene.car_state.getYawRate()));
+    ui_draw_hud_infobox(s, sidebar_fit_x, hud_top_2_y, hud_top_2_w, hud_top_2_h,
+                        "yaw rate", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  }
 }
 
 void ui_draw_top_hud_infobox3(UIState *s) {
   char value[16];
 
   //value
-  snprintf(value, sizeof(value), "%.0f°",(s->scene.car_control.getActuators().getSteer()));
+  snprintf(value, sizeof(value), "%.2f°",(s->scene.car_state.getAEgo()));
   ui_draw_hud_infobox(s, hud_top_3_x, hud_top_3_y, hud_top_3_w, hud_top_3_h,
-                        "OP Steer", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "aEgo", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
@@ -130,9 +151,9 @@ void ui_draw_top_hud_infobox4(UIState *s) {
    char value[16];
 
   //value
-  snprintf(value, sizeof(value), "%.0f°",(s->scene.car_control.getActuators().getSteeringAngleDeg()));
+  snprintf(value, sizeof(value), "%.2f°",(s->scene.car_state.getVEgo()));
   ui_draw_hud_infobox(s, hud_top_4_x, hud_top_4_y, hud_top_4_w, hud_top_4_h,
-                        "OP SteerAngle", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "vEgo", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
@@ -163,43 +184,69 @@ void ui_draw_left_hud_infobox1(UIState *s) {
   //show Orange if more than 15 degrees
   //show red if  more than 30 degrees
   if(((int)(steeringAngleDeg) < -15) || ((int)(steeringAngleDeg) > 15)) {
-    value_font_color = nvgRGBA(255, 188, 3, 200);
+    value_font_color = nvgRGBA(0, 0, 255, 200);
   }
   if(((int)(steeringAngleDeg) < -30) || ((int)(steeringAngleDeg) > 30)) {
+    value_font_color = nvgRGBA(0, 127, 255, 200);
+  }
+  if(((int)(steeringAngleDeg) < -45) || ((int)(steeringAngleDeg) > 45)) {
+    value_font_color = nvgRGBA(0, 255, 255, 200);
+  }
+  if(((int)(steeringAngleDeg) < -60) || ((int)(steeringAngleDeg) > 60)) {
+    value_font_color = nvgRGBA(0, 255, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -75) || ((int)(steeringAngleDeg) > 75)) {
+    value_font_color = nvgRGBA(255, 255, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -90) || ((int)(steeringAngleDeg) > 90)) {
+    value_font_color = nvgRGBA(255, 127, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -135) || ((int)(steeringAngleDeg) > 135)) {
+    value_font_color = nvgRGBA(255, 0, 255, 200);
+  }
+  if(((int)(steeringAngleDeg) < -180) || ((int)(steeringAngleDeg) > 180)) {
     value_font_color = nvgRGBA(255, 0, 0, 200);
   }
 
+
   //value
   snprintf(value, sizeof(value), "%.2f°",(steeringAngleDeg));
-  ui_draw_hud_infobox(s, sidebar_fit_x, hud_left_1_y, hud_left_1_w, hud_left_1_h,
-                        "Steer Angle", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        value, 64, value_font_color, NVG_ALIGN_CENTER,
-                        "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  if(s->scene.car_state.getSteeringPressed()) {
+    ui_draw_hud_infobox(s, sidebar_fit_x, hud_left_1_y, hud_left_1_w, hud_left_1_h,
+                          "User Angle", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                          value, 64, value_font_color, NVG_ALIGN_CENTER,
+                          "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  } else {
+    ui_draw_hud_infobox(s, sidebar_fit_x, hud_left_1_y, hud_left_1_w, hud_left_1_h,
+                          "OP Angle", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                          value, 64, value_font_color, NVG_ALIGN_CENTER,
+                          "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  }
 }
 
 void ui_draw_left_hud_infobox2(UIState *s) {
   int sidebar_fit_x = 0;
   char value[16];
   NVGcolor value_font_color = COLOR_WHITE_ALPHA(200);
-  float steeringTorque = s->scene.car_state.getSteeringTorque();
+  float steeringAngleDesiredDeg = s->scene.controls_state.getSteeringAngleDesiredDeg();
   
   //Fit sidebar screen
   sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
 
-  if(((int)(steeringTorque) < -40) || ((int)(steeringTorque) > 40)) {
+  if(((int)(steeringAngleDesiredDeg) < -90) || ((int)(steeringAngleDesiredDeg) > 90)) {
     value_font_color = nvgRGBA(255, 188, 3, 200);
   }
-  if(((int)(steeringTorque) < -80) || ((int)(steeringTorque) > 80)) {
+  if(((int)(steeringAngleDesiredDeg) < -180) || ((int)(steeringAngleDesiredDeg) > 180)) {
     value_font_color = nvgRGBA(255, 0, 0, 200);
   }
 
 
   //value
-  snprintf(value, sizeof(value), "%.2f°",(steeringTorque));
+  snprintf(value, sizeof(value), "%.2f°",(steeringAngleDesiredDeg));
   ui_draw_hud_infobox(s, sidebar_fit_x, hud_left_2_y, hud_left_2_w, hud_left_2_h,
-                        "Steer Torque", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        "Desired Angle", 32, COLOR_WHITE, NVG_ALIGN_CENTER,
                         value, 64, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "Nm", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+                        "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
 }
 
 void ui_draw_left_hud(UIState *s) {
@@ -223,16 +270,25 @@ void ui_draw_right_hud_infobox1(UIState *s) {
 }
 
 void ui_draw_right_hud_infobox2(UIState *s) {
-  if(s->scene.car_state.getGasPressed()) {
+  char value[16];
+  if(s->scene.car_state.getBrake()>0) {
+      snprintf(value, sizeof(value), "%.2f°", s->scene.car_state.getBrake());
       ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "Pressed", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+                        "User G/B", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                        value, 64, COLOR_RED, NVG_ALIGN_CENTER,
+                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
   } else {
-      ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                        "Gas Pedal", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "none", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);  
+    if(s->scene.car_state.getGasPressed()) {
+        ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
+                          "User G/B", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                          "Pressed", 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                          "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+    } else {
+        ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
+                          "User G/B", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
+                          "none", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
+                          "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+    }
   }
 }
 
@@ -257,8 +313,8 @@ void ui_draw_infobar(UIState *s) {
   localtime_r(&rawtime, &timeinfo);
   strftime(date_time, sizeof(date_time),"%D %T", &timeinfo);
   //snprintf(infobar, sizeof(infobar), "%s", date_time);
-  //snprintf(infobar, sizeof(infobar), "%s/Gas:%.2f/Barke:%.2f/Steer:%.2f/SteerAngle:%.2f", date_time, s->);
-  snprintf(infobar, sizeof(infobar), "%s/UserBrake:%.2f/SteeringAngleDesiredDeg:%.2f", date_time, s->scene.car_state.getBrake() , s->scene.controls_state.getSteeringAngleDesiredDeg());
+  //snprintf(infobar, sizeof(infobar), "%s/FP:%s/SteerControl:%u", date_time, s->scene.car_params.getCarFingerprint().cStr() , (unsigned int) s->scene.car_params.getSteerControlType());
+  snprintf(infobar, sizeof(infobar), "%s/MESpeed:%f/SteerControl:%u/FP:%s", date_time, s->scene.car_params.getMinEnableSpeed() , (unsigned int) s->scene.car_params.getSteerControlType(), s->scene.car_params.getCarFingerprint().cStr());
 
 
 

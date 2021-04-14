@@ -34,9 +34,17 @@
 #define COLOR_WHITE nvgRGBA(255, 255, 255, 255)
 #define COLOR_WHITE_ALPHA(x) nvgRGBA(255, 255, 255, x)
 #define COLOR_RED_ALPHA(x) nvgRGBA(201, 34, 49, x)
-#define COLOR_YELLOW nvgRGBA(218, 202, 37, 255)
 #define COLOR_RED nvgRGBA(201, 34, 49, 255)
+#define COLOR_YELLOW nvgRGBA(218, 202, 37, 255)
 #define COLOR_YELLOW_APPHA(x) nvgRGBA(218, 202, 37, x)
+#define COLOR_PURPLE nvgRGBA(255, 0, 255, 255)
+#define COLOR_PURPLE_APPHA(x) nvgRGBA(255, 0, 255, x)
+#define COLOR_ORANGE nvgRGBA(255, 127, 0, 255)
+#define COLOR_ORANGE_APPHA(x) nvgRGBA(255, 127, 0, x)
+#define COLOR_GREEN nvgRGBA(0, 255, 0, 255)
+#define COLOR_GREEN_APPHA(x) nvgRGBA(0, 255, 0, x)
+#define COLOR_BLUE nvgRGBA(0, 0, 255, 255)
+#define COLOR_BLUE_APPHA(x) nvgRGBA(0, 0, 255, x)
 
 #define UI_BUF_COUNT 4
 
@@ -116,6 +124,7 @@ typedef struct UIScene {
   cereal::DeviceState::Reader deviceState;
   cereal::RadarState::LeadData::Reader lead_data[2];
   cereal::CarState::Reader car_state;
+  cereal::CarParams::Reader car_params;
   cereal::CarControl::Reader car_control;
   cereal::ControlsState::Reader controls_state;
   cereal::DriverState::Reader driver_state;
