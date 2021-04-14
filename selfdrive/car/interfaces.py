@@ -128,6 +128,7 @@ class CarInterfaceBase():
     
     #AllowGAS
     if (cs_out.brakePressed and (not self.CS.out.brakePressed or not cs_out.standstill)):
+      events.add(EventName.pedalPressed)
 
     # we engage when pcm is active (rising edge)
     if pcm_enable:
