@@ -47,9 +47,13 @@ class CarController():
     # 100Hz if we want to control at finer resolution in the future.
     if frame % P.HCA_STEP == 0:
 
+      # read params
+      params = Params()
+      is_vag_fulltime_lka_enabled = params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1"
+
       # FAULT AVOIDANCE: HCA must not be enabled at standstill. Also stop
       # commanding HCA if there's a fault, so the steering rack recovers.
-      if enabled and not (CS.out.standstill or CS.steeringFault):
+      if (enabled or is_vag_fulltime_lka_enabled) and not (CS.out.standstill or CS.steeringFault):
 
         # FAULT AVOIDANCE: Requested HCA torque must not exceed 3.0 Nm. This
         # is inherently handled by scaling to STEER_MAX. The rack doesn't seem
