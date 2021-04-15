@@ -44,6 +44,8 @@ def manager_init():
     ("IsVagInfobarEnabled", "1"),
     ("IsVagBlinkerEnabled", "1"),
     ("IsVagBlindspotEnabled", "1"),
+    ("IsVagFulltimeLkaEnabled", "0"),
+    ("IsVagDevelopModeEnabled", "0"),
   ]
 
   if params.get("RecordFrontLock", encoding='utf-8') == "1":

@@ -64,6 +64,20 @@ QWidget * vag_panel() {
                                             ""
                                             ));
 
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ParamControl("IsVagFulltimeLkaEnabled",
+                                            "Enable Fulltime LKA",
+                                            "Fulltime enable LKA without ACC engaged",
+                                            ""
+                                            ));
+
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ParamControl("IsVagDevelopModeEnabled",
+                                            "Enable develop mode",
+                                            "Enable develop mode",
+                                            ""
+                                            ));
+
   vag_list->addStretch(0);
   QWidget *widget = new QWidget;
   widget->setLayout(vag_list);

@@ -88,6 +88,8 @@ keys = {
   b"IsVagInfobarEnabled": [TxType.PERSISTENT],
   b"IsVagBlinkerEnabled": [TxType.PERSISTENT],
   b"IsVagBlindspotEnabled": [TxType.PERSISTENT],
+  b"IsVagFulltimeLkaEnabled": [TxType.PERSISTENT],
+  b"IsVagDevelopModeEnabled": [TxType.PERSISTENT],
 }
 
 def ensure_bytes(v):
