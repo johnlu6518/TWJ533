@@ -1,4 +1,5 @@
 #include "common/swaglog.h"
+#include "common/params.h"
 #include "paint_extend.hpp"
 #include "ui.hpp"
 #include <math.h>
@@ -302,11 +303,14 @@ void ui_draw_right_hud(UIState *s) {
 void ui_draw_infotext(UIState *s) {
   int sidebar_fit_x = 0;
   char value[256];
-  
+  bool IsVagFulltimeLkaEnabled;
+
   //Fit sidebar screen
   sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
+
+  read_param(&IsVagFulltimeLkaEnabled, "IsVagFulltimeLkaEnabled");
   
-  snprintf(value, sizeof(value), "TEXT TEST %.2f°", s->scene.car_state.getBrake());
+  snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled = %d", IsVagFulltimeLkaEnabled);
       ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
 }
 
@@ -374,7 +378,7 @@ void ui_draw_blinker(UIState *s) {
 void ui_draw_blindspot(UIState *s) {
   const int y = s->viz_rect.bottom() - hud_blindspot_w;
   const bool leftBlindspot = s->scene.car_state.getLeftBlindspot();
-  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();
+  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();;
 
   if (leftBlindspot) {
     const int left_x = s->viz_rect.x;
@@ -383,7 +387,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, left_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, left_x+hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
+    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
     nvgFill(s->vg);
   }
 
@@ -394,7 +398,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, right_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, right_x-hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
+    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
     nvgFill(s->vg);
   }
 }
