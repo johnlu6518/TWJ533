@@ -374,7 +374,7 @@ void ui_draw_blinker(UIState *s) {
 void ui_draw_blindspot(UIState *s) {
   const int y = s->viz_rect.bottom() - hud_blindspot_w;
   const bool leftBlindspot = s->scene.car_state.getLeftBlindspot();
-  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();;
+  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();
 
   if (leftBlindspot) {
     const int left_x = s->viz_rect.x;
@@ -383,7 +383,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, left_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, left_x+hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
+    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
     nvgFill(s->vg);
   }
 
@@ -394,7 +394,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, right_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, right_x-hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
+    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
     nvgFill(s->vg);
   }
 }
