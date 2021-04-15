@@ -9,6 +9,7 @@
 #include "nanovg_gl.h"
 #include "nanovg_gl_utils.h"
 #include "paint.hpp"
+#include "paint_extend.hpp"
 #include "sidebar.hpp"
 
 // TODO: this is also hardcoded in common/transformations/camera.py
@@ -283,6 +284,8 @@ static void ui_draw_vision_header(UIState *s) {
   ui_draw_vision_maxspeed(s);
   ui_draw_vision_speed(s);
   ui_draw_vision_event(s);
+  //Pon 20210407 Add HUD UI
+  ui_draw_hud(s);
 }
 
 static void ui_draw_vision_footer(UIState *s) {
@@ -398,6 +401,12 @@ void ui_draw(UIState *s) {
   }
   nvgEndFrame(s->vg);
   glDisable(GL_BLEND);
+
+//Pon 20210407 Add HUD UI
+#ifdef UI_DEVELOP_IN_SIDEBAR
+  ui_draw_hud(s);
+#endif
+
 }
 
 void ui_draw_image(const UIState *s, const Rect &r, const char *name, float alpha) {
