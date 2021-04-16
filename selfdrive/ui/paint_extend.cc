@@ -387,7 +387,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, left_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, left_x+hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
+    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
     nvgFill(s->vg);
   }
 
@@ -398,7 +398,7 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, right_x, y+hud_blindspot_w);
     nvgLineTo(s->vg, right_x-hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
-    nvgFillColor(s->vg, COLOR_YELLOW_APPHA(200));
+    nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
     nvgFill(s->vg);
   }
 }
