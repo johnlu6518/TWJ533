@@ -402,10 +402,12 @@ void ui_draw(UIState *s) {
   nvgEndFrame(s->vg);
   glDisable(GL_BLEND);
 
-//Pon 20210407 Add HUD UI
-#ifdef UI_DEVELOP_IN_SIDEBAR
-  ui_draw_hud(s);
-#endif
+  //PONTEST
+  bool IsVagDevelopModeEnabled;
+  read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");
+  if(IsVagDevelopModeEnabled) {
+    ui_draw_hud(s);
+  }
 
 }
 
