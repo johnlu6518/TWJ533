@@ -48,5 +48,6 @@ const int hud_right_2_y = 500;
 const int hud_right_2_w = 180;
 const int hud_right_2_h = 180;
 
+void ui_draw_lead_car(UIState *s, const cereal::ModelDataV2::Reader &model);
 void ui_draw_hud(UIState *s);
 

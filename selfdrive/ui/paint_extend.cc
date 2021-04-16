@@ -309,9 +309,9 @@ void ui_draw_infotext(UIState *s) {
   sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
 
   read_param(&IsVagFulltimeLkaEnabled, "IsVagFulltimeLkaEnabled");
-  
+
   snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled = %d/enabled=%d/available=%d", IsVagFulltimeLkaEnabled, s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
-      ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
+  ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
 }
 
 void ui_draw_infobar(UIState *s) {
@@ -399,6 +399,30 @@ void ui_draw_blindspot(UIState *s) {
     nvgLineTo(s->vg, right_x-hud_blindspot_w, y+hud_blindspot_w);
     nvgClosePath(s->vg);
     nvgFillColor(s->vg, COLOR_ORANGE_APPHA(200));
+    nvgFill(s->vg);
+  }
+}
+
+void ui_draw_lead_car(UIState *s, const cereal::ModelDataV2::Reader &model) {
+  const auto lead_cars = model.getLeads();
+  int sidebar_fit_x = 0;
+  char value[256];
+
+  //Fit sidebar screen
+  sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
+
+  snprintf(value, sizeof(value), "lead_cars.size() = %d/", lead_cars.size());
+  ui_draw_hud_text(s, sidebar_fit_x, 700, value, 64, COLOR_PURPLE);
+
+  for(int i=0; i<lead_cars.size(); i++) {
+    int x = lead_cars[i].getXyva()[0];
+    int y = lead_cars[i].getXyva()[1];
+    nvgBeginPath(s->vg);
+    nvgMoveTo(s->vg, x, y);
+    nvgLineTo(s->vg, x-25, y+15);
+    nvgLineTo(s->vg, x+25, y+15);
+    nvgClosePath(s->vg);
+    nvgFillColor(s->vg, COLOR_GREEN_APPHA(200));
     nvgFill(s->vg);
   }
 }
