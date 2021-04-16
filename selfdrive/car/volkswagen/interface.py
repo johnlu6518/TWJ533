@@ -14,7 +14,7 @@ class CarInterface(CarInterfaceBase):
     self.displayMetricUnitsPrev = None
     self.buttonStatesPrev = BUTTON_STATES.copy()
 
-    #PONTEST Alias Extended CAN parser to PT/CAM parser, based on detected network location
+    # Alias Extended CAN parser to PT/CAM parser, based on detected network location
     self.cp_ext = self.cp if CP.networkLocation == NetworkLocation.fwdCamera else self.cp_cam
 
   @staticmethod
@@ -46,8 +46,7 @@ class CarInterface(CarInterfaceBase):
         ret.transmissionType = TransmissionType.manual
       cloudlog.info("Detected transmission type: %s", ret.transmissionType)
 
-      #PONTEST
-      if True: #0xfd in fingerprint[1]:  # ESP_21 present on bus 1, we're hooked up at the CAN gateway
+      if 0xfd in fingerprint[1]:  #True: ESP_21 present on bus 1, we're hooked up at the CAN gateway
         ret.networkLocation = NetworkLocation.gateway
       else:  # We're hooked up at the LKAS camera
         ret.networkLocation = NetworkLocation.fwdCamera
@@ -67,30 +66,28 @@ class CarInterface(CarInterfaceBase):
 
     # Per-chassis tuning values, override tuning defaults here if desired
 
-    if candidate == CAR.GOLF_MK7:
+    if candidate == CAR.AUDI_A3_MK3:
+      # Averages of all 8V A3 variants
+      ret.mass = 1335 + STD_CARGO_KG
+      ret.wheelbase = 2.61
+
+    elif candidate == CAR.GOLF_MK7:
       # Averages of all AU Golf variants
       ret.mass = 1397 + STD_CARGO_KG
       ret.wheelbase = 2.62
 
     elif candidate == CAR.JETTA_MK7:
       # Averages of all BU Jetta variants
+      # China variant has 5cm longer wheelbase, might need to identify in more detail later
       ret.mass = 1328 + STD_CARGO_KG
       ret.wheelbase = 2.71
 
-    elif candidate == CAR.PASSAT_MK8:
-      # Averages of all 3C Passat variants
+    elif candidate == CAR.PASSAT_B8:
+      # Averages of all non-China 3C Passat variants
+      # Up to 350kg spread in curb weight between variants, might need to identify in more detail later
+      # TODO: Chinese market B8 has 8cm longer wheelbase, find out how to identify
       ret.mass = 1551 + STD_CARGO_KG
       ret.wheelbase = 2.79
-
-    elif candidate == CAR.TIGUAN_MK2:
-      # Average of SWB and LWB variants
-      ret.mass = 1715 + STD_CARGO_KG
-      ret.wheelbase = 2.74
-
-    elif candidate == CAR.AUDI_A3:
-      # Temporarily carry forward old tuning values while we test vehicle identification
-      ret.mass = 1500 + STD_CARGO_KG
-      ret.wheelbase = 2.64
 
     elif candidate == CAR.SEAT_ATECA_MK1:
       # Averages of all 5F Ateca variants
@@ -101,6 +98,11 @@ class CarInterface(CarInterfaceBase):
       # Averages of all 5N Kodiaq variants
       ret.mass = 1569 + STD_CARGO_KG
       ret.wheelbase = 2.79
+
+    elif candidate == CAR.SKODA_OCTAVIA_MK3:
+      # Averages of all 5E/NE Octavia variants
+      ret.mass = 1388 + STD_CARGO_KG
+      ret.wheelbase = 2.68
 
     elif candidate == CAR.SKODA_SCALA_MK1:
       # Averages of all NW Scala variants
