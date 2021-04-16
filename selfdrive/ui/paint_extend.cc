@@ -329,9 +329,9 @@ void ui_draw_infobar(UIState *s) {
   struct tm timeinfo;
   localtime_r(&rawtime, &timeinfo);
   strftime(date_time, sizeof(date_time),"%D %T", &timeinfo);
-  //snprintf(infobar, sizeof(infobar), "%s", date_time);
+  snprintf(infobar, sizeof(infobar), "%s", date_time);
   //snprintf(infobar, sizeof(infobar), "%s/FP:%s/SteerControl:%u", date_time, s->scene.car_params.getCarFingerprint().cStr() , (unsigned int) s->scene.car_params.getSteerControlType());
-  snprintf(infobar, sizeof(infobar), "%s/MESpeed:%f/SteerControl:%u/FP:%s", date_time, s->scene.car_params.getMinEnableSpeed() , (unsigned int) s->scene.car_params.getSteerControlType(), s->scene.car_params.getCarFingerprint().cStr());
+  //snprintf(infobar, sizeof(infobar), "%s/MESpeed:%f/SteerControl:%u/FP:%s", date_time, s->scene.car_params.getMinEnableSpeed() , (unsigned int) s->scene.car_params.getSteerControlType(), s->scene.car_params.getCarFingerprint().cStr());
 
 
 
