@@ -310,8 +310,14 @@ void ui_draw_infotext(UIState *s) {
 
   read_param(&IsVagFulltimeLkaEnabled, "IsVagFulltimeLkaEnabled");
 
-  snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled = %d/enabled=%d/available=%d", IsVagFulltimeLkaEnabled, s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
-  ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
+  snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled=%d", IsVagFulltimeLkaEnabled);
+  ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_YELLOW);
+  snprintf(value, sizeof(value), "CC.enabled=%d, CC.active=%d, CS.enabled=%d, CS.active=%d", s->scene.car_control.getEnabled(), s->scene.car_control.getActive(), s->scene.controls_state.getEnabled(), s->scene.controls_state.getActive());
+  ui_draw_hud_text(s, sidebar_fit_x, 700, value, 64, COLOR_YELLOW);
+  snprintf(value, sizeof(value), "CC.CruiseControl.cancel=%d, CC.CruiseControl.override=%d", s->scene.car_control.getCruiseControl().getCancel(), s->scene.car_control.getCruiseControl().getOverride());
+  ui_draw_hud_text(s, sidebar_fit_x, 800, value, 64, COLOR_YELLOW);
+  snprintf(value, sizeof(value), "CS.CruiseState.enabled=%d, CS.CruiseState.available=%d", s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
+  ui_draw_hud_text(s, sidebar_fit_x, 900, value, 64, COLOR_YELLOW);
 }
 
 void ui_draw_infobar(UIState *s) {
@@ -412,7 +418,7 @@ void ui_draw_lead_car(UIState *s, const cereal::ModelDataV2::Reader &model) {
   sidebar_fit_x = s->viz_rect.x + hud_left_2_x;
 
   snprintf(value, sizeof(value), "lead_cars.size() = %d/", lead_cars.size());
-  ui_draw_hud_text(s, sidebar_fit_x, 700, value, 64, COLOR_PURPLE);
+  ui_draw_hud_text(s, sidebar_fit_x+800, 5, value, 64, COLOR_YELLOW);
 
   for(int i=0; i<lead_cars.size(); i++) {
     int x = lead_cars[i].getXyva()[0];
