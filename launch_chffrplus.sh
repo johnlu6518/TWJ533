@@ -225,8 +225,10 @@ function launch {
   #./build.py && ./manager.py
   if [ !-d "/sdcard/log" ]; then
     mkdir /sdcard/log
+    ./build.py > /sdcard/log/build_log_$(date +"%Y%m%d_%H%M%S").txt && ./manager.py > /sdcard/log/launch_log_$(date +"%Y%m%d_%H%M%S").txt
+  else
+    ./build.py && ./manager.py
   fi
-  ./build.py > /sdcard/log/build_log_$(date +"%Y%m%d_%H%M%S").txt && ./manager.py > /sdcard/log/launch_log_$(date +"%Y%m%d_%H%M%S").txt
 
   # if broken, keep on screen error
   while true; do sleep 1; done
