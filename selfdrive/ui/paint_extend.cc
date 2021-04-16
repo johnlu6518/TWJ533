@@ -310,7 +310,7 @@ void ui_draw_infotext(UIState *s) {
 
   read_param(&IsVagFulltimeLkaEnabled, "IsVagFulltimeLkaEnabled");
   
-  snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled = %d", IsVagFulltimeLkaEnabled);
+  snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled = %d/enabled=%d/available=%d", IsVagFulltimeLkaEnabled, s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
       ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_PURPLE);
 }
 
