@@ -222,13 +222,10 @@ function launch {
   # start manager
   cd selfdrive/manager
   #Pon 20210407 Dump log to file
-  #./build.py && ./manager.py
-  if [ !-d "/sdcard/log" ]; then
-    mkdir /sdcard/log
+  if [ -d "/sdcard/log" ]; then
     ./build.py > /sdcard/log/build_log_$(date +"%Y%m%d_%H%M%S").txt && ./manager.py > /sdcard/log/launch_log_$(date +"%Y%m%d_%H%M%S").txt
-  else
-    ./build.py && ./manager.py
   fi
+  ./build.py && ./manager.py
 
   # if broken, keep on screen error
   while true; do sleep 1; done
