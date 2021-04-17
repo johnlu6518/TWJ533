@@ -435,12 +435,34 @@ void ui_draw_lead_car(UIState *s, const cereal::ModelDataV2::Reader &model) {
 
 //===== draw hud =====
 void ui_draw_hud(UIState *s) {
-  ui_draw_top_hud(s);
-  ui_draw_bottom_hud(s);
-  ui_draw_left_hud(s);
-  ui_draw_right_hud(s);
-  ui_draw_infotext(s);
-  ui_draw_infobar(s);
-  ui_draw_blindspot(s);
-  ui_draw_blinker(s);
+  bool IsVagInfoboxEnabled;
+  bool IsVagInfobarEnabled;
+  bool IsVagBlinkerEnabled;
+  bool IsVagBlindspotEnabled;
+  bool IsVagDevelopModeEnabled;
+  
+  read_param(&IsVagInfoboxEnabled, "IsVagInfoboxEnabled");
+  read_param(&IsVagInfobarEnabled, "IsVagInfobarEnabled");
+  read_param(&IsVagBlinkerEnabled, "IsVagBlinkerEnabled");
+  read_param(&IsVagBlindspotEnabled, "IsVagBlindspotEnabled");
+  read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");
+  
+  if(IsVagInfoboxEnabled) {
+    ui_draw_top_hud(s);
+    ui_draw_bottom_hud(s);
+    ui_draw_left_hud(s);
+    ui_draw_right_hud(s);
+  }
+  if(IsVagDevelopModeEnabled) {
+   ui_draw_infotext(s);
+  }
+  if(IsVagInfobarEnabled) {
+    ui_draw_infobar(s);
+  }
+  if(IsVagBlindspotEnabled) {
+    ui_draw_blindspot(s);
+  }
+  if(IsVagBlinkerEnabled) {
+    ui_draw_blinker(s);
+  }
 }
