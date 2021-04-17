@@ -47,6 +47,7 @@ void MainWindow::openSettings() {
 }
 
 void MainWindow::closeSettings() {
+  homeWindow->getOffroadHome()->refreshScreen();
   main_layout->setCurrentWidget(homeWindow);
 }
 

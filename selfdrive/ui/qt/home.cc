@@ -69,6 +69,25 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
   }
 }
 
+//PONTEST
+void OffroadHome::refreshScreen() {
+  bool IsVagDevelopModeEnabled;
+  read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");
+
+  if(IsVagDevelopModeEnabled) {
+    date->hide();
+    version->hide();
+    drive->hide();
+    setup->hide();
+    statsAndSetupWidget->hide();
+  } else {
+    date->show();
+    version->show();
+    drive->show();
+    setup->show();
+    statsAndSetupWidget->show();
+  }
+}
 
 // OffroadHome: the offroad home page
 
@@ -81,26 +100,17 @@ OffroadHome::OffroadHome(QWidget* parent) : QWidget(parent) {
 
   date = new QLabel();
   date->setStyleSheet(R"(font-size: 55px;)");
-//Pon 20210407 Disable header info on the home screen
-#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(date, 0, Qt::AlignHCenter | Qt::AlignLeft);
-#endif
 
   alert_notification = new QPushButton();
   alert_notification->setVisible(false);
   QObject::connect(alert_notification, SIGNAL(released()), this, SLOT(openAlerts()));
-//Pon 20210407 Disable header info on the home screen
-#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(alert_notification, 0, Qt::AlignHCenter | Qt::AlignRight);
-#endif
 
   std::string brand = Params().read_db_bool("Passive") ? "dashcam" : "openpilot";
-  QLabel* version = new QLabel(QString::fromStdString(brand + " v" + Params().get("Version")));
+  version = new QLabel(QString::fromStdString(brand + " v" + Params().get("Version")));
   version->setStyleSheet(R"(font-size: 55px;)");
-//Pon 20210407 Disable header info on the home screen
-#if (!UI_DEVELOP_IN_SIDEBAR)
   header_layout->addWidget(version, 0, Qt::AlignHCenter | Qt::AlignRight);
-#endif
 
   main_layout->addLayout(header_layout);
 
@@ -110,17 +120,15 @@ OffroadHome::OffroadHome(QWidget* parent) : QWidget(parent) {
 
   QHBoxLayout* statsAndSetup = new QHBoxLayout();
 
-//Pon 20210407 Add HUD UI
-#if (!UI_DEVELOP_IN_SIDEBAR)
-  DriveStats* drive = new DriveStats;
+  drive = new DriveStats;
   drive->setFixedSize(800, 800);
   statsAndSetup->addWidget(drive);
 
-  SetupWidget* setup = new SetupWidget;
+  setup = new SetupWidget;
   //setup->setFixedSize(700, 700);
   statsAndSetup->addWidget(setup);
-#endif
-  QWidget* statsAndSetupWidget = new QWidget();
+
+  statsAndSetupWidget = new QWidget();
   statsAndSetupWidget->setLayout(statsAndSetup);
 
   center_layout->addWidget(statsAndSetupWidget);

@@ -12,6 +12,8 @@
 #include "sound.hpp"
 #include "ui/ui.hpp"
 #include "widgets/offroad_alerts.hpp"
+#include "widgets/drive_stats.hpp"
+#include "widgets/setup.hpp"
 
 // container window for onroad NVG UI
 class GLWindow : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -60,6 +62,7 @@ class OffroadHome : public QWidget {
 
 public:
   explicit OffroadHome(QWidget* parent = 0);
+  void refreshScreen();
 
 private:
   QTimer* timer;
@@ -68,6 +71,10 @@ private:
   QStackedLayout* center_layout;
   OffroadAlert* alerts_widget;
   QPushButton* alert_notification;
+  QLabel* version;
+  DriveStats* drive;
+  SetupWidget* setup;
+  QWidget* statsAndSetupWidget;
 
 public slots:
   void closeAlerts();
@@ -81,6 +88,9 @@ class HomeWindow : public QWidget {
 public:
   explicit HomeWindow(QWidget* parent = 0);
   GLWindow* glWindow;
+  OffroadHome* getOffroadHome() {
+    return home;
+  }
 
 signals:
   void openSettings();

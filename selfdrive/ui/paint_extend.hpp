@@ -1,8 +1,6 @@
 #pragma once
 #include "ui.hpp"
 
-#define UI_DEVELOP_IN_SIDEBAR 1
-
 //Pon 20210407 Add HUD UI
 const int hud_infobar_h = 80;
 
