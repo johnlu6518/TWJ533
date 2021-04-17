@@ -29,6 +29,7 @@ QWidget * vag_panel() {
                                               );
   vag_list->addWidget(paramControlIsVagInfoboxEnabled);
 
+#if 0
   QComboBox* comboBoxLeftHud1 = new QComboBox();
   comboBoxLeftHud1->addItem("ABC", 0);
   comboBoxLeftHud1->addItem("BBC", 1);
@@ -42,6 +43,7 @@ QWidget * vag_panel() {
     }
   )");
   vag_list->addWidget(comboBoxLeftHud1);
+#endif
 
   vag_list->addWidget(horizontal_line());
   vag_list->addWidget(new ParamControl("IsVagInfobarEnabled",
