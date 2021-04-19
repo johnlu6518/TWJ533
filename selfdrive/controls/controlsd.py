@@ -88,6 +88,12 @@ class Controls:
     community_feature_disallowed = self.CP.communityFeature and not community_feature_toggle
     self.read_only = not car_recognized or not controller_available or \
                        self.CP.dashcamOnly or community_feature_disallowed
+
+    print("[PONTEST][controlsd.py] car_recognized=", car_recognized)
+    print("[PONTEST][controlsd.py] controller_available=", controller_available)
+    print("[PONTEST][controlsd.py] self.CP.dashcamOnly=", self.CP.dashcamOnly)
+    print("[PONTEST][controlsd.py] community_feature_disallowed=", community_feature_disallowed)
+
     if self.read_only:
       self.CP.safetyModel = car.CarParams.SafetyModel.noOutput
 
@@ -105,12 +111,16 @@ class Controls:
 
     if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
       self.LaC = LatControlAngle(self.CP)
+      print("[PONTEST][controlsd.py] LatControlAngle")
     elif self.CP.lateralTuning.which() == 'pid':
       self.LaC = LatControlPID(self.CP)
+      print("[PONTEST][controlsd.py] LatControlPID")
     elif self.CP.lateralTuning.which() == 'indi':
       self.LaC = LatControlINDI(self.CP)
+      print("[PONTEST][controlsd.py] LatControlINDI")
     elif self.CP.lateralTuning.which() == 'lqr':
       self.LaC = LatControlLQR(self.CP)
+      print("[PONTEST][controlsd.py] LatControlLQR")
 
     self.state = State.disabled
     self.enabled = False
@@ -311,55 +321,84 @@ class Controls:
 
     # ENABLED, PRE ENABLING, SOFT DISABLING
     if self.state != State.disabled:
+      print("[PONTEST][controlsd.py][NO State.disabled]")
       # user and immediate disable always have priority in a non-disabled state
       if self.events.any(ET.USER_DISABLE):
+        print("[PONTEST][controlsd.py][NO State.disabled] ET.USER_DISABLE")
         self.state = State.disabled
         self.current_alert_types.append(ET.USER_DISABLE)
+        print("[PONTEST][controlsd.py][NO State.disabled] ET.USER_DISABLE 2")
 
       elif self.events.any(ET.IMMEDIATE_DISABLE):
+        print("[PONTEST][controlsd.py][NO State.disabled] ET.IMMEDIATE_DISABLE")
         self.state = State.disabled
         self.current_alert_types.append(ET.IMMEDIATE_DISABLE)
+        print("[PONTEST][controlsd.py][NO State.disabled] ET.IMMEDIATE_DISABLE 2")
 
       else:
         # ENABLED
         if self.state == State.enabled:
+          print("[PONTEST][controlsd.py][State.enabled]")
           if self.events.any(ET.SOFT_DISABLE):
+            print("[PONTEST][controlsd.py][State.enabled] ET.SOFT_DISABLE")
             self.state = State.softDisabling
             self.soft_disable_timer = 300   # 3s
             self.current_alert_types.append(ET.SOFT_DISABLE)
+            print("[PONTEST][controlsd.py][State.enabled] ET.SOFT_DISABLE 2")
 
         # SOFT DISABLING
         elif self.state == State.softDisabling:
+          print("[PONTEST][controlsd.py][State.softDisabling]")
           if not self.events.any(ET.SOFT_DISABLE):
+            print("[PONTEST][controlsd.py][State.softDisabling] NOT ET.SOFT_DISABLE")
             # no more soft disabling condition, so go back to ENABLED
             self.state = State.enabled
+            print("[PONTEST][controlsd.py][State.softDisabling] NOT ET.SOFT_DISABLE 2")
 
           elif self.events.any(ET.SOFT_DISABLE) and self.soft_disable_timer > 0:
+            print("[PONTEST][controlsd.py][State.softDisabling] ET.SOFT_DISABLE")
             self.current_alert_types.append(ET.SOFT_DISABLE)
+            print("[PONTEST][controlsd.py][State.softDisabling] ET.SOFT_DISABLE 2")
 
           elif self.soft_disable_timer <= 0:
+            print("[PONTEST][controlsd.py][State.softDisabling] soft_disable_timer timeout")
             self.state = State.disabled
 
         # PRE ENABLING
         elif self.state == State.preEnabled:
+          print("[PONTEST][controlsd.py][State.preEnabled]")
           if not self.events.any(ET.PRE_ENABLE):
+            print("[PONTEST][controlsd.py][State.preEnabled] ET.NOT PRE_ENABLE")
             self.state = State.enabled
+            print("[PONTEST][controlsd.py][State.preEnabled] ET.NOT PRE_ENABLE 2")
+            
           else:
+            print("[PONTEST][controlsd.py][State.preEnabled] ET.PRE_ENABLE 2")
             self.current_alert_types.append(ET.PRE_ENABLE)
+            print("[PONTEST][controlsd.py][State.preEnabled] ET.PRE_ENABLE 2")
 
     # DISABLED
     elif self.state == State.disabled:
+      print("[PONTEST][controlsd.py][State.disabled]")
       if self.events.any(ET.ENABLE):
+        print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE")
         if self.events.any(ET.NO_ENTRY):
+          print("[PONTEST][controlsd.py][State.disabled] ET.NO_ENTRY")
           self.current_alert_types.append(ET.NO_ENTRY)
+          print("[PONTEST][controlsd.py][State.disabled] ET.NO_ENTRY 2")
 
         else:
           if self.events.any(ET.PRE_ENABLE):
+            print("[PONTEST][controlsd.py][State.disabled] ET.PRE_ENABLE")
             self.state = State.preEnabled
+            print("[PONTEST][controlsd.py][State.disabled] ET.PRE_ENABLE 2")
           else:
+            print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE")
             self.state = State.enabled
+            print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE 2")
           self.current_alert_types.append(ET.ENABLE)
           self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
+          print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE 3")
 
     # Check if actuators are enabled
     self.active = self.state == State.enabled or self.state == State.softDisabling
