@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cassert>
 #include <QComboBox>
+#include <stdlib.h>
 
 #ifndef QCOM
 #include "networking.hpp"
@@ -79,6 +80,10 @@ QWidget * vag_panel() {
                                             "Enable develop mode",
                                             ""
                                             ));
+
+  vag_list->addWidget(horizontal_line());
+  vag_list->addWidget(new ButtonControl("Android Settings", "OPEN", "",
+                                      [=]() { system("am start com.android.settings"); }));
 
   vag_list->addStretch(0);
   QWidget *widget = new QWidget;
