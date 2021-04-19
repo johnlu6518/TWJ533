@@ -518,8 +518,11 @@ class Controls:
     CC.hudControl.visualAlert = self.AM.visual_alert
 
     #PONTEST
-    if(CC.enabled==1 or CC.active==1):
-      print("[PONTEST][controlsd.py] CC.enabled=", CC.enabled," active=", CC.active)
+    CC.available = (CS.cruiseState.available and not CC.brakePressed)
+
+    #PONTEST
+    if(CC.enabled==1 or CC.available==1):
+      print("[PONTEST][controlsd.py] CC.enabled=", CC.enabled, " available=", CC.available)
 
     if not self.read_only:
       # send car controls over can
