@@ -31,6 +31,10 @@ class CarController():
 
     P = CarControllerParams
 
+    #PONTEST
+    if(enabled==1 or active==1):
+      print("[PONTEST][carcontroller.py] enabled=", enabled," active=", active)
+
     # Send CAN commands.
     can_sends = []
 

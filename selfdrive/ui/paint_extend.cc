@@ -312,11 +312,11 @@ void ui_draw_infotext(UIState *s) {
 
   snprintf(value, sizeof(value), "IsVagFulltimeLkaEnabled=%d", IsVagFulltimeLkaEnabled);
   ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_YELLOW);
-  snprintf(value, sizeof(value), "[ControlsState] enabled=%d, active=%d state=%d", s->scene.controls_state.getEnabled(), s->scene.controls_state.getActive(), (unsigned int)s->scene.controls_state.getState());
+  snprintf(value, sizeof(value), "CoS enabled=%d, CoS.active=%d state=%d", s->scene.controls_state.getEnabled(), s->scene.controls_state.getActive(), (unsigned int)s->scene.controls_state.getState());
   ui_draw_hud_text(s, sidebar_fit_x, 700, value, 80, COLOR_YELLOW);
-  snprintf(value, sizeof(value), "[CarControl]CC.enabled=%d, CC.active=%d", s->scene.car_control.getEnabled(), s->scene.car_control.getActive());
+  snprintf(value, sizeof(value), "CC.enabled=%d, CC.active=%d", s->scene.car_control.getEnabled(), s->scene.car_control.getActive());
   ui_draw_hud_text(s, sidebar_fit_x, 800, value, 80, COLOR_YELLOW);
-  snprintf(value, sizeof(value), "CS.CruiseState.enabled=%d, CS.CruiseState.available=%d", s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
+  snprintf(value, sizeof(value), "CaS.CruiseState.enabled=%d, CaS.CruiseState.available=%d", s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
   ui_draw_hud_text(s, sidebar_fit_x, 900, value, 80, COLOR_YELLOW);
 }
 

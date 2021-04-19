@@ -478,6 +478,10 @@ class Controls:
     self.AM.process_alerts(self.sm.frame, clear_event)
     CC.hudControl.visualAlert = self.AM.visual_alert
 
+    #PONTEST
+    if(CC.enabled==1 or CC.active==1):
+      print("[PONTEST][controlsd.py] CC.enabled=", CC.enabled," active=", CC.active)
+
     if not self.read_only:
       # send car controls over can
       can_sends = self.CI.apply(CC)
