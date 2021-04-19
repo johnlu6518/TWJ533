@@ -26,25 +26,28 @@ class CarController():
 
     self.steer_rate_limited = False
 
-  def update(self, enabled, active, CS, frame, actuators, visual_alert, audible_alert, leftLaneVisible, rightLaneVisible):
+  def update(self, enabled, available, CS, frame, actuators, visual_alert, audible_alert, leftLaneVisible, rightLaneVisible):
     """ Controls thread """
 
     P = CarControllerParams
 
     #PONTEST
-    if(enabled==1 or active==1):
-      print("[PONTEST][carcontroller.py] enabled=", enabled," active=", active)
+    if(enabled==1 or available==1):
+      print("[PONTEST][carcontroller.py] enabled=", enabled," available=", available)
 
     # Send CAN commands.
     can_sends = []
 
     # read params
     params = Params()
-    is_vag_fulltime_lka_enabled = params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1"
+    is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
 
     #PONTEST
     if(is_vag_fulltime_lka_enabled==1):
-      print("[PONTEST][carcontroller.py] is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
+      print("[PONTEST][carcontroller.py] 1 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
+
+    if(is_vag_fulltime_lka_enabled=="1"):
+      print("[PONTEST][carcontroller.py] 2 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
 
     #--------------------------------------------------------------------------
     #                                                                         #
@@ -63,7 +66,7 @@ class CarController():
       # commanding HCA if there's a fault, so the steering rack recovers.
       #PONTEST
       #if enabled and not (CS.out.standstill or CS.steeringFault):
-      if (enabled or (active and is_vag_fulltime_lka_enabled)) and not (CS.out.standstill or CS.steeringFault):
+      if (enabled or (available and is_vag_fulltime_lka_enabled)) and not (CS.out.standstill or CS.steeringFault):
 
         # FAULT AVOIDANCE: Requested HCA torque must not exceed 3.0 Nm. This
         # is inherently handled by scaling to STEER_MAX. The rack doesn't seem
@@ -134,7 +137,7 @@ class CarController():
     if frame % P.LDW_STEP == 0:
       #PONTEST
       #hcaEnabled = True if enabled and not CS.out.standstill else False
-      hcaEnabled = True if (enabled or (active and is_vag_fulltime_lka_enabled)) and not CS.out.standstill else False
+      hcaEnabled = True if (enabled or (available and is_vag_fulltime_lka_enabled)) and not CS.out.standstill else False
 
       if visual_alert == car.CarControl.HUDControl.VisualAlert.steerRequired:
         hud_alert = MQB_LDW_MESSAGES["laneAssistTakeOverSilent"]
