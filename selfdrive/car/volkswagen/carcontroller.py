@@ -76,7 +76,7 @@ class CarController():
         apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, P)
         self.steer_rate_limited = new_steer != apply_steer
 
-        print("[PONTEST][carcontroller.py] new_steer=", new_steer, " apply_steer=", apply_steer)
+        print("[PONTEST][carcontroller.py] actuators.steer=", actuators.steer, " new_steer=", new_steer, " apply_steer=", apply_steer)
 
         # FAULT AVOIDANCE: HCA must not be enabled for >360 seconds. Sending
         # a single frame with HCA disabled is an effective workaround.
@@ -121,8 +121,7 @@ class CarController():
 
       self.apply_steer_last = apply_steer
       idx = (frame / P.HCA_STEP) % 16
-      print("[PONTEST][carcontroller.py] apply_steer=", apply_steer, " apply_steer=", apply_steer)
-      print("[PONTEST][carcontroller.py] hcaEnabled=", hcaEnabled)
+      print("[PONTEST][carcontroller.py] hcaEnabled=", hcaEnabled, " apply_steer=", apply_steer)
       can_sends.append(volkswagencan.create_mqb_steering_control(self.packer_pt, CANBUS.pt, apply_steer,
                                                                  idx, hcaEnabled))
 

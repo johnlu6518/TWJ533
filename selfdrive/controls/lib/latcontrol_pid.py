@@ -41,6 +41,9 @@ class LatControlPID():
       check_saturation = (CS.vEgo > 10) and not CS.steeringRateLimited and not CS.steeringPressed
       output_steer = self.pid.update(angle_steers_des, CS.steeringAngleDeg, check_saturation=check_saturation, override=CS.steeringPressed,
                                      feedforward=steer_feedforward, speed=CS.vEgo, deadzone=deadzone)
+
+      print("[PONTEST][latcontrol_pid.py] output_steer=", output_steer)
+
       pid_log.active = True
       pid_log.p = self.pid.p
       pid_log.i = self.pid.i

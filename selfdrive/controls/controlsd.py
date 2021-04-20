@@ -446,6 +446,8 @@ class Controls:
     # Steering PID loop and lateral MPC
     actuators.steer, actuators.steeringAngleDeg, lac_log = self.LaC.update(self.active, CS, self.CP, self.VM, params, lat_plan)
 
+    print("[PONTEST][controlsd.py] actuators.steer=", actuators.steer, " actuators.steeringAngleDeg=", actuators.steeringAngleDeg)
+
     # Check for difference between desired angle and angle for angle based control
     angle_control_saturated = self.CP.steerControlType == car.CarParams.SteerControlType.angle and \
       abs(actuators.steeringAngleDeg - CS.steeringAngleDeg) > STEER_ANGLE_SATURATION_THRESHOLD
@@ -633,6 +635,8 @@ class Controls:
 
     # Compute actuators (runs PID loops and lateral MPC)
     actuators, v_acc, a_acc, lac_log = self.state_control(CS)
+    print("[PONTEST][controlsd.py] actuators.steer=", actuators.steer, " v_acc=", v_acc, " a_acc=", a_acc)
+
 
     self.prof.checkpoint("State Control")
 
