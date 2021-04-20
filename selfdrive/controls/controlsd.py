@@ -518,7 +518,7 @@ class Controls:
     CC.hudControl.visualAlert = self.AM.visual_alert
 
     #PONTEST
-    CC.available = (CS.cruiseState.available and not CC.brakePressed)
+    CC.available = (CS.cruiseState.available and not CS.brakePressed)
 
     #PONTEST
     if(CC.enabled==1 or CC.available==1):
