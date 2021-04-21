@@ -404,7 +404,7 @@ class Controls:
 
     # Check if actuators are enabled #PONTEST
     is_vag_fulltime_lka_enabled = True if (self.params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
-    self.active = self.state == State.enabled or self.state == State.softDisabling or (self.available and is_vag_fulltime_lka_enabled)
+    self.active = self.state == State.enabled or self.state == State.softDisabling or (CS.cruiseState.available and is_vag_fulltime_lka_enabled)
     print("[PONTEST][controlsd.py][State.disabled] self.active=", self.active)
 
     if self.active:
