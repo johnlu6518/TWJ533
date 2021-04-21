@@ -395,15 +395,17 @@ class Controls:
             self.state = State.preEnabled
             print("[PONTEST][controlsd.py][State.disabled] ET.PRE_ENABLE 2")
           else:
-            print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE")
+            print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE 1")
             self.state = State.enabled
             print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE 2")
           self.current_alert_types.append(ET.ENABLE)
           self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
           print("[PONTEST][controlsd.py][State.disabled] ET.ENABLE 3")
 
-    # Check if actuators are enabled
+    # Check if actuators are enabled #PONTEST
     self.active = self.state == State.enabled or self.state == State.softDisabling
+    print("[PONTEST][controlsd.py][State.disabled] self.active=", self.active)
+
     if self.active:
       self.current_alert_types.append(ET.WARNING)
 
