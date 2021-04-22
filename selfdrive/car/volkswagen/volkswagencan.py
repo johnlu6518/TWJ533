@@ -2,7 +2,7 @@
 # PQ35/PQ46/NMS, and any future MLB, to come later.
 
 def create_mqb_steering_control(packer, bus, apply_steer, idx, lkas_enabled):
-  print("[PONTEST][volkswagencan.py] packer=", packer, " bus=", bus, " apply_steer=", apply_steer, " idx=", idx, " lkas_enabled=", lkas_enabled)
+  print("[PONTEST][volkswagencan.py][create_mqb_steering_control()] packer=", packer, " bus=", bus, " apply_steer=", apply_steer, " idx=", idx, " lkas_enabled=", lkas_enabled)
   values = {
     "SET_ME_0X3": 0x3,
     "Assist_Torque": abs(apply_steer),
@@ -18,9 +18,9 @@ def create_mqb_steering_control(packer, bus, apply_steer, idx, lkas_enabled):
 
 def create_mqb_hud_control(packer, bus, hca_enabled, steering_pressed, hud_alert, left_lane_visible, right_lane_visible,
                            ldw_lane_warning_left, ldw_lane_warning_right, ldw_side_dlc_tlc, ldw_dlc, ldw_tlc):
-  print("[PONTEST][volkswagencan.py] packer=", packer, " bus=", bus, " hca_enabled=", hca_enabled, " steering_pressed=", steering_pressed, " hud_alert=", hud_alert)
-  print("[PONTEST][volkswagencan.py] left_lane_visible=", left_lane_visible, " right_lane_visible=", right_lane_visible, " ldw_lane_warning_left=", ldw_lane_warning_left, " ldw_lane_warning_right=", ldw_lane_warning_right)
-  print("[PONTEST][volkswagencan.py] ldw_side_dlc_tlc=", ldw_side_dlc_tlc, " ldw_dlc=", ldw_dlc, " ldw_tlc=", ldw_tlc)
+  print("[PONTEST][volkswagencan.py][create_mqb_hud_control()] packer=", packer, " bus=", bus, " hca_enabled=", hca_enabled, " steering_pressed=", steering_pressed, " hud_alert=", hud_alert)
+  print("[PONTEST][volkswagencan.py][create_mqb_hud_control()] left_lane_visible=", left_lane_visible, " right_lane_visible=", right_lane_visible, " ldw_lane_warning_left=", ldw_lane_warning_left, " ldw_lane_warning_right=", ldw_lane_warning_right)
+  print("[PONTEST][volkswagencan.py][create_mqb_hud_control()] ldw_side_dlc_tlc=", ldw_side_dlc_tlc, " ldw_dlc=", ldw_dlc, " ldw_tlc=", ldw_tlc)
   if hca_enabled:
     left_lane_hud = 3 if left_lane_visible else 1
     right_lane_hud = 3 if right_lane_visible else 1
@@ -43,7 +43,7 @@ def create_mqb_hud_control(packer, bus, hca_enabled, steering_pressed, hud_alert
   return packer.make_can_msg("LDW_02", bus, values)
 
 def create_mqb_acc_buttons_control(packer, bus, buttonStatesToSend, CS, idx):
-  print("[PONTEST][volkswagencan.py] packer=", packer, " bus=", bus, " buttonStatesToSend=", buttonStatesToSend, " CS=", CS)
+  print("[PONTEST][volkswagencan.py][create_mqb_acc_buttons_control()] packer=", packer, " bus=", bus, " buttonStatesToSend=", buttonStatesToSend, " CS=", CS)
   values = {
     "GRA_Hauptschalter": CS.graHauptschalter,
     "GRA_Abbrechen": buttonStatesToSend["cancel"],

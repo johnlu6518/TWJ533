@@ -33,7 +33,7 @@ class CarController():
 
     #PONTEST
     if(enabled==1 or available==1):
-      print("[PONTEST][carcontroller.py] enabled=", enabled," available=", available)
+      print("[PONTEST][carcontroller.py][update()] enabled=", enabled," available=", available)
 
     # Send CAN commands.
     can_sends = []
@@ -44,10 +44,10 @@ class CarController():
 
     #PONTEST
     if(is_vag_fulltime_lka_enabled==1):
-      print("[PONTEST][carcontroller.py] 1 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
+      print("[PONTEST][carcontroller.py][update()] 1 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
 
     if(is_vag_fulltime_lka_enabled=="1"):
-      print("[PONTEST][carcontroller.py] 2 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
+      print("[PONTEST][carcontroller.py][update()] 2 is_vag_fulltime_lka_enabled=", is_vag_fulltime_lka_enabled)
 
     #--------------------------------------------------------------------------
     #                                                                         #
@@ -76,7 +76,7 @@ class CarController():
         apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, P)
         self.steer_rate_limited = new_steer != apply_steer
 
-        print("[PONTEST][carcontroller.py] actuators.steer=", actuators.steer, " new_steer=", new_steer, " apply_steer=", apply_steer)
+        print("[PONTEST][carcontroller.py][update()] actuators.steer=", actuators.steer, " new_steer=", new_steer, " apply_steer=", apply_steer)
 
         # FAULT AVOIDANCE: HCA must not be enabled for >360 seconds. Sending
         # a single frame with HCA disabled is an effective workaround.
@@ -121,7 +121,8 @@ class CarController():
 
       self.apply_steer_last = apply_steer
       idx = (frame / P.HCA_STEP) % 16
-      print("[PONTEST][carcontroller.py] hcaEnabled=", hcaEnabled, " apply_steer=", apply_steer)
+      print("[PONTEST][carcontroller.py][update()] hcaEnabled=", hcaEnabled, " apply_steer=", apply_steer)
+      print("[PONTEST][carcontroller.py][update()] create_mqb_steering_control")
       can_sends.append(volkswagencan.create_mqb_steering_control(self.packer_pt, CANBUS.pt, apply_steer,
                                                                  idx, hcaEnabled))
 
@@ -145,6 +146,7 @@ class CarController():
       else:
         hud_alert = MQB_LDW_MESSAGES["none"]
 
+      print("[PONTEST][carcontroller.py][update()] create_mqb_hud_control")
       can_sends.append(volkswagencan.create_mqb_hud_control(self.packer_pt, CANBUS.pt, hcaEnabled,
                                                             CS.out.steeringPressed, hud_alert, leftLaneVisible,
                                                             rightLaneVisible, CS.ldw_lane_warning_left,
@@ -206,6 +208,7 @@ class CarController():
         if self.graMsgSentCount == 0:
           self.graMsgStartFramePrev = frame
         idx = (CS.graMsgBusCounter + 1) % 16
+        print("[PONTEST][carcontroller.py][update()] create_mqb_acc_buttons_control")
         can_sends.append(volkswagencan.create_mqb_acc_buttons_control(self.packer_pt, self.ext_can, self.graButtonStatesToSend, CS, idx))
         self.graMsgSentCount += 1
         if self.graMsgSentCount >= P.GRA_VBP_COUNT:
