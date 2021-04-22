@@ -25,7 +25,7 @@ class LatControlPID():
 
     print("[PONTEST][latcontrol_pid.py] CS.vEgo=", CS.vEgo, " active=", active, " CS.cruiseState.available=", CS.cruiseState.available)
 
-    if CS.vEgo < 0.3 or not active not or CS.cruiseState.available:
+    if CS.vEgo < 0.3 or not active or not CS.cruiseState.available:
       output_steer = 0.0
       pid_log.active = False
       self.pid.reset()
