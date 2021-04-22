@@ -24,8 +24,8 @@ class LatControlPID():
     angle_steers_des = angle_steers_des_no_offset + params.angleOffsetDeg
 
     print("[PONTEST][latcontrol_pid.py][update()] CS.vEgo=", CS.vEgo, " active=", active, " CS.cruiseState.available=", CS.cruiseState.available)
-
-    if CS.vEgo < 0.3 or not active:
+    #PONTEST
+    if (CS.vEgo < 0.3 or not active) and (CS.vEgo < 0.3 or not CS.cruiseState.available):
       output_steer = 0.0
       pid_log.active = False
       self.pid.reset()
