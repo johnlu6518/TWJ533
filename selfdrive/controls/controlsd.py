@@ -412,7 +412,7 @@ class Controls:
 
     # Check if openpilot is engaged
     self.enabled = self.active or self.state == State.preEnabled
-    print("[PONTEST][controlsd.py][state_transition()] self.enabled=", self.enabled" self.active=", self.active)
+    print("[PONTEST][controlsd.py][state_transition()] self.enabled=", self.enabled, " self.active=", self.active)
 
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""
