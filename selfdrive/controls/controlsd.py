@@ -485,7 +485,7 @@ class Controls:
     CC.hudControl.visualAlert = self.AM.visual_alert
 
     #Pon fulltime lka
-    CC.available = (CS.cruiseState.available and not CS.brakePressed)
+    CC.available = CS.cruiseState.available
 
     if not self.read_only:
       # send car controls over can
