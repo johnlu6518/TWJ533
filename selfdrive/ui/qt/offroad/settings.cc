@@ -19,7 +19,7 @@
 #include "common/util.h"
 #include "selfdrive/hardware/hw.h"
 
-//PONTEST
+//Pon Settings menu
 QWidget * vag_panel() {
   QVBoxLayout *vag_list = new QVBoxLayout();
   vag_list->setSpacing(30);

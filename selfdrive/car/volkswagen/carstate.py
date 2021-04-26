@@ -234,7 +234,7 @@ class CarState(CarStateBase):
                   ("BCM1_Rueckfahrlicht_Schalter", "Gateway_72", 0)]  # Reverse light from BCM
       checks += [("Motor_14", 10)]  # From J623 Engine control module
 
-    #PONTEST
+    #Pon Autodetect J533 or comma camera can
     if CP.networkLocation == NetworkLocation.fwdCamera:
       # Extended CAN devices other than the camera are here on CANBUS.pt
       # TODO: Add bsm checks[] when we have solid autodetection
@@ -253,7 +253,7 @@ class CarState(CarStateBase):
     signals = MqbExtraSignals.lkas_camera[0]
     checks = []
 
-    #PONTEST
+    #Pon Autodetect J533 or comma camera can
     if CP.networkLocation == NetworkLocation.gateway:
       # Extended CAN devices other than the camera are here on CANBUS.cam
       # TODO: Add bsm checks[] when we have solid autodetection
@@ -262,7 +262,7 @@ class CarState(CarStateBase):
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, CANBUS.cam)
 
-#PONTEST
+#Pon J533 protocol
 class MqbExtraSignals:
   # Additional signal and message lists to dynamically add for optional or bus-portable controllers
   acc_radar = ([

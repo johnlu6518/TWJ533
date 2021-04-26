@@ -83,7 +83,7 @@ keys = {
   b"Offroad_UpdateFailed": [TxType.CLEAR_ON_MANAGER_START],
   b"Offroad_HardwareUnsupported": [TxType.CLEAR_ON_MANAGER_START],
   b"ForcePowerDown": [TxType.CLEAR_ON_MANAGER_START],
-  #PONTEST
+  #Pon Settings menu - settings parameter
   b"IsVagInfoboxEnabled": [TxType.PERSISTENT],
   b"IsVagInfobarEnabled": [TxType.PERSISTENT],
   b"IsVagBlinkerEnabled": [TxType.PERSISTENT],

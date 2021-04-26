@@ -39,7 +39,7 @@ def manager_init():
     ("OpenpilotEnabledToggle", "1"),
     ("VisionRadarToggle", "0"),
     ("IsDriverViewEnabled", "0"),
-    #PONTEST
+    #Pon Settings menu - settings parameter
     ("IsVagInfoboxEnabled", "1"),
     ("IsVagInfobarEnabled", "1"),
     ("IsVagBlinkerEnabled", "1"),

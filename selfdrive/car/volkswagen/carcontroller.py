@@ -53,7 +53,7 @@ class CarController():
 
       # FAULT AVOIDANCE: HCA must not be enabled at standstill. Also stop
       # commanding HCA if there's a fault, so the steering rack recovers.
-      #PONTEST
+      #Pon Fulltime lka (add condition acc available trigger lka)
       #if enabled and not (CS.out.standstill or CS.steeringFault):
       if (enabled or (available and is_vag_fulltime_lka_enabled)) and not (CS.out.standstill or CS.steeringFault):
 
@@ -122,7 +122,7 @@ class CarController():
     # filters LDW_02 from the factory camera and OP emits LDW_02 at 10Hz.
 
     if frame % P.LDW_STEP == 0:
-      #PONTEST
+      #Pon Fulltime lka (add condition acc available trigger lka)
       #hcaEnabled = True if enabled and not CS.out.standstill else False
       hcaEnabled = True if (enabled or (available and is_vag_fulltime_lka_enabled)) and not CS.out.standstill else False
 
