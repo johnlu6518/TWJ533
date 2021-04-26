@@ -69,7 +69,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
   }
 }
 
-//PONTEST
+//Pon Realtime refresh settings
 void OffroadHome::refreshScreen() {
   bool IsVagDevelopModeEnabled;
   read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");

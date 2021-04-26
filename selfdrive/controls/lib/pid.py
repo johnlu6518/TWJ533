@@ -56,10 +56,6 @@ class PIController():
     self.control = 0
 
   def update(self, setpoint, measurement, speed=0.0, check_saturation=True, override=False, feedforward=0., deadzone=0., freeze_integrator=False):
-
-    print("[PONTEST][pid.py][update()] setpoint=", setpoint, " measurement=", measurement, " speed=", speed, " check_saturation=", check_saturation)
-    print("[PONTEST][pid.py][update()] override=", override, " feedforward=", feedforward, " deadzone=", deadzone, " freeze_integrator=", freeze_integrator)
-
     self.speed = speed
 
     error = float(apply_deadzone(setpoint - measurement, deadzone))
@@ -71,11 +67,9 @@ class PIController():
     else:
       i = self.i + error * self.k_i * self.i_rate
       control = self.p + self.f + i
-      print("[PONTEST][pid.py][update()] control=", control)
 
       if self.convert is not None:
         control = self.convert(control, speed=self.speed)
-        print("[PONTEST][pid.py][update()] 1 control=", control, " speed=", speed)
 
       # Update when changing i will move the control away from the limits
       # or when i will move towards the sign of the error
@@ -87,7 +81,6 @@ class PIController():
     control = self.p + self.f + self.i
     if self.convert is not None:
       control = self.convert(control, speed=self.speed)
-      print("[PONTEST][pid.py][update()] 2 control=", control, " speed=", speed)
 
     self.saturated = self._check_saturation(control, check_saturation, error)
 

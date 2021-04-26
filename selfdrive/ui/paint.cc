@@ -174,7 +174,8 @@ static void ui_draw_world(UIState *s) {
   ui_draw_vision_lane_lines(s);
 
   // Draw lead indicators if openpilot is handling longitudinal
-  //PONTEST if (s->scene.longitudinal_control) {
+  //PONTEST Lead car
+  //if (s->scene.longitudinal_control) {
     if (scene->lead_data[0].getStatus()) {
       draw_lead(s, 0);
     }
@@ -402,7 +403,7 @@ void ui_draw(UIState *s) {
   nvgEndFrame(s->vg);
   glDisable(GL_BLEND);
 
-  //PONTEST
+  //Pon Hook setting - IsVagDevelopModeEnabled
   bool IsVagDevelopModeEnabled;
   read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");
   if(IsVagDevelopModeEnabled) {
