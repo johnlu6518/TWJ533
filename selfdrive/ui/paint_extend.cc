@@ -314,7 +314,7 @@ void ui_draw_infotext(UIState *s) {
   ui_draw_hud_text(s, sidebar_fit_x, 5, value, 64, COLOR_YELLOW);
   snprintf(value, sizeof(value), "CoS enabled=%d, CoS.active=%d state=%d", s->scene.controls_state.getEnabled(), s->scene.controls_state.getActive(), (unsigned int)s->scene.controls_state.getState());
   ui_draw_hud_text(s, sidebar_fit_x, 700, value, 80, COLOR_YELLOW);
-  snprintf(value, sizeof(value), "CaC.enabled=%d, CaC.active=%d CaC.available=%d", s->scene.car_control.getEnabled(), s->scene.car_control.getActive(), s->scene.car_control.getAvailable());
+  snprintf(value, sizeof(value), "CaC.enabled=%d, CaC.active=%d CaC.availableFulltimeLka=%d", s->scene.car_control.getEnabled(), s->scene.car_control.getActive(), s->scene.car_control.getAvailableFulltimeLka());
   ui_draw_hud_text(s, sidebar_fit_x, 800, value, 80, COLOR_YELLOW);
   snprintf(value, sizeof(value), "CaS.CrS.enabled=%d, CaS.CrS.available=%d", s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
   ui_draw_hud_text(s, sidebar_fit_x, 900, value, 80, COLOR_YELLOW);

@@ -363,10 +363,6 @@ class Controls:
           self.current_alert_types.append(ET.ENABLE)
           self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
 
-    #Pon Fulltime lka
-    params = Params()
-    is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
-
     # Check if actuators are enabled
     self.active = self.state == State.enabled or self.state == State.softDisabling
     if self.active:
@@ -484,8 +480,14 @@ class Controls:
     self.AM.process_alerts(self.sm.frame, clear_event)
     CC.hudControl.visualAlert = self.AM.visual_alert
 
-    #Pon fulltime lka
-    CC.available = CS.cruiseState.available
+    #Pon Fulltime lka
+    params = Params()
+    is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
+    CC.availableFulltimeLka = (CS.cruiseState==CruiseState.available) \
+                              and is_vag_fulltime_lka_enabled \
+                              and (CS.gearShifter==GearShifter.drive \
+                              or CS.gearShifter==GearShifter.sport \
+                              or CS.gearShifter==GearShifter.manumatic)
 
     if not self.read_only:
       # send car controls over can
