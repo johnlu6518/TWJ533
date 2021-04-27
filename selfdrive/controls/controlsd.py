@@ -487,8 +487,8 @@ class Controls:
     print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.drive)=", bool(CS.gearShifter==GearShifter.drive))
     print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.sport)=", bool(CS.gearShifter==GearShifter.sport))
     print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.manumatic)=", bool(CS.gearShifter==GearShifter.manumatic))
-    CC.availableFulltimeLka = bool(bool(CS.cruiseState==CS.cruiseState.available) \
-                              and is_vag_fulltime_lka_enabled \
+    CC.availableFulltimeLka = bool(CS.cruiseState.available \
+                              and bool(is_vag_fulltime_lka_enabled) \
                               and bool(bool(CS.gearShifter==GearShifter.drive) \
                               or bool(CS.gearShifter==GearShifter.sport) \
                               or bool(CS.gearShifter==GearShifter.manumatic)))
