@@ -41,7 +41,7 @@ Desire = log.LateralPlan.Desire
 LaneChangeState = log.LateralPlan.LaneChangeState
 LaneChangeDirection = log.LateralPlan.LaneChangeDirection
 EventName = car.CarEvent.EventName
-
+GearShifter = car.CarState.GearShifter
 
 class Controls:
   def __init__(self, sm=None, pm=None, can_sock=None):
@@ -483,11 +483,15 @@ class Controls:
     #Pon Fulltime lka
     params = Params()
     is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
-    CC.availableFulltimeLka = (CS.cruiseState==CruiseState.available) \
+    print("[PONTEST][controlsd.py] bool(CS.cruiseState==CS.cruiseState.available)=", bool(CS.cruiseState==CS.cruiseState.available))
+    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.drive)=", bool(CS.gearShifter==GearShifter.drive))
+    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.sport)=", bool(CS.gearShifter==GearShifter.sport))
+    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.manumatic)=", bool(CS.gearShifter==GearShifter.manumatic))
+    CC.availableFulltimeLka = bool(bool(CS.cruiseState==CS.cruiseState.available) \
                               and is_vag_fulltime_lka_enabled \
-                              and (CS.gearShifter==GearShifter.drive \
-                              or CS.gearShifter==GearShifter.sport \
-                              or CS.gearShifter==GearShifter.manumatic)
+                              and bool(bool(CS.gearShifter==GearShifter.drive) \
+                              or bool(CS.gearShifter==GearShifter.sport) \
+                              or bool(CS.gearShifter==GearShifter.manumatic)))
 
     if not self.read_only:
       # send car controls over can
