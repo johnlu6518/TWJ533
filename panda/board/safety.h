@@ -210,7 +210,8 @@ void generic_rx_checks(bool stock_ecu_detected) {
 
   // exit controls on rising edge of brake press
   if (brake_pressed && (!brake_pressed_prev || vehicle_moving)) {
-    controls_allowed = 0;
+    //Pon Recheck controls_allowed for flltime lka (Support gas/brake press without ACC enable)
+    //controls_allowed = 0;
   }
   brake_pressed_prev = brake_pressed;
 
