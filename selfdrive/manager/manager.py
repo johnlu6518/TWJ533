@@ -39,6 +39,13 @@ def manager_init():
     ("OpenpilotEnabledToggle", "1"),
     ("VisionRadarToggle", "0"),
     ("IsDriverViewEnabled", "0"),
+    #Pon Settings menu - settings parameter
+    ("IsVagInfoboxEnabled", "1"),
+    ("IsVagInfobarEnabled", "1"),
+    ("IsVagBlinkerEnabled", "1"),
+    ("IsVagBlindspotEnabled", "1"),
+    ("IsVagFulltimeLkaEnabled", "0"),
+    ("IsVagDevelopModeEnabled", "0"),
   ]
 
   if params.get("RecordFrontLock", encoding='utf-8') == "1":
