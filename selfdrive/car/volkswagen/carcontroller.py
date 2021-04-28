@@ -1,4 +1,5 @@
 from cereal import car
+from common.params import Params, put_nonblocking
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.volkswagen import volkswagencan
 from selfdrive.car.volkswagen.values import DBC, CANBUS, NetworkLocation, MQB_LDW_MESSAGES, BUTTON_STATES, CarControllerParams
@@ -25,7 +26,8 @@ class CarController():
 
     self.steer_rate_limited = False
 
-  def update(self, enabled, CS, frame, actuators, visual_alert, audible_alert, leftLaneVisible, rightLaneVisible):
+  #Pon Fulltime lka
+  def update(self, enabled, availableFulltimeLka, CS, frame, actuators, visual_alert, audible_alert, leftLaneVisible, rightLaneVisible):
     """ Controls thread """
 
     P = CarControllerParams
@@ -48,7 +50,9 @@ class CarController():
 
       # FAULT AVOIDANCE: HCA must not be enabled at standstill. Also stop
       # commanding HCA if there's a fault, so the steering rack recovers.
-      if enabled and not (CS.out.standstill or CS.steeringFault):
+      #Pon Fulltime lka (add condition acc available trigger lka)
+      #if enabled and not (CS.out.standstill or CS.steeringFault):
+      if (enabled or availableFulltimeLka) and not (CS.out.standstill or CS.steeringFault):
 
         # FAULT AVOIDANCE: Requested HCA torque must not exceed 3.0 Nm. This
         # is inherently handled by scaling to STEER_MAX. The rack doesn't seem
@@ -115,7 +119,9 @@ class CarController():
     # filters LDW_02 from the factory camera and OP emits LDW_02 at 10Hz.
 
     if frame % P.LDW_STEP == 0:
-      hcaEnabled = True if enabled and not CS.out.standstill else False
+      #Pon Fulltime lka (add condition acc available trigger lka)
+      #hcaEnabled = True if enabled and not CS.out.standstill else False
+      hcaEnabled = True if (enabled or availableFulltimeLka) and not CS.out.standstill else False
 
       if visual_alert == car.CarControl.HUDControl.VisualAlert.steerRequired:
         hud_alert = MQB_LDW_MESSAGES["laneAssistTakeOverSilent"]

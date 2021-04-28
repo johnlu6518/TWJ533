@@ -281,6 +281,7 @@ struct CarControl {
   # must be true for any actuator commands to work
   enabled @0 :Bool;
   active @7 :Bool;
+  availableFulltimeLka @8 :Bool;
 
   actuators @6 :Actuators;
 

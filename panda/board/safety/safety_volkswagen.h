@@ -171,7 +171,8 @@ static int volkswagen_mqb_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
     // Signal: TSK_06.TSK_Status
     if (addr == MSG_TSK_06) {
       int acc_status = (GET_BYTE(to_push, 3) & 0x7);
-      controls_allowed = ((acc_status == 3) || (acc_status == 4) || (acc_status == 5)) ? 1 : 0;
+      //Pon Add acc ready(available) to controls_allowed for fulltime lka
+      controls_allowed = ((acc_status == 2) || (acc_status == 3) || (acc_status == 4) || (acc_status == 5)) ? 1 : 0;
     }
 
     // Signal: Motor_20.MO_Fahrpedalrohwert_01

@@ -41,7 +41,7 @@ Desire = log.LateralPlan.Desire
 LaneChangeState = log.LateralPlan.LaneChangeState
 LaneChangeDirection = log.LateralPlan.LaneChangeDirection
 EventName = car.CarEvent.EventName
-
+GearShifter = car.CarState.GearShifter
 
 class Controls:
   def __init__(self, sm=None, pm=None, can_sock=None):
@@ -479,6 +479,15 @@ class Controls:
     self.AM.add_many(self.sm.frame, alerts, self.enabled)
     self.AM.process_alerts(self.sm.frame, clear_event)
     CC.hudControl.visualAlert = self.AM.visual_alert
+
+    #Pon Fulltime lka
+    params = Params()
+    is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
+    CC.availableFulltimeLka = bool(CS.cruiseState.available \
+                              and bool(is_vag_fulltime_lka_enabled) \
+                              and bool(bool(CS.gearShifter==GearShifter.drive) \
+                              or bool(CS.gearShifter==GearShifter.sport) \
+                              or bool(CS.gearShifter==GearShifter.manumatic)))
 
     if not self.read_only:
       # send car controls over can

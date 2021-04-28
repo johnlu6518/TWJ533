@@ -23,7 +23,8 @@ class LatControlPID():
     angle_steers_des_no_offset = math.degrees(VM.get_steer_from_curvature(-lat_plan.curvature, CS.vEgo))
     angle_steers_des = angle_steers_des_no_offset + params.angleOffsetDeg
 
-    if CS.vEgo < 0.3 or not active:
+    #Pon Fulltime lka
+    if (CS.vEgo < 0.3 or not active) and (CS.vEgo < 0.3 or not CS.cruiseState.available):
       output_steer = 0.0
       pid_log.active = False
       self.pid.reset()
