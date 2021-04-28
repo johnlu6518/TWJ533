@@ -256,11 +256,42 @@ void ui_draw_left_hud(UIState *s) {
 
 void ui_draw_right_hud_infobox1(UIState *s) {
   char value[16];
-  snprintf(value, sizeof(value), "%.2f°", (s->scene.car_state.getYawRate()));
-  ui_draw_hud_infobox(s, hud_right_1_x, hud_right_1_y, hud_right_1_w, hud_right_1_h,
-                    "yaw rate", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                    value, 64, COLOR_YELLOW, NVG_ALIGN_CENTER,
-                    "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  NVGcolor value_font_color = COLOR_WHITE_ALPHA(200);
+  float steeringAngleDeg = s->scene.car_state.getSteeringAngleDeg();
+
+  if(((int)(steeringAngleDeg) < -30) || ((int)(steeringAngleDeg) > 30)) {
+    value_font_color = nvgRGBA(0, 255, 255, 200);
+  }
+  if(((int)(steeringAngleDeg) < -60) || ((int)(steeringAngleDeg) > 60)) {
+    value_font_color = nvgRGBA(0, 255, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -90) || ((int)(steeringAngleDeg) > 90)) {
+    value_font_color = nvgRGBA(255, 255, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -120) || ((int)(steeringAngleDeg) > 120)) {
+    value_font_color = nvgRGBA(255, 127, 0, 200);
+  }
+  if(((int)(steeringAngleDeg) < -150) || ((int)(steeringAngleDeg) > 150)) {
+    value_font_color = nvgRGBA(255, 0, 255, 200);
+  }
+  if(((int)(steeringAngleDeg) < -180) || ((int)(steeringAngleDeg) > 180)) {
+    value_font_color = nvgRGBA(255, 0, 0, 200);
+  }
+
+
+  //value
+  snprintf(value, sizeof(value), "%.2f°",(steeringAngleDeg));
+  if(s->scene.car_state.getSteeringPressed()) {
+    ui_draw_hud_infobox(s, hud_right_1_x, hud_right_1_y, hud_right_1_w, hud_right_1_h,
+                          "User Angle", 48, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                          value, 80, value_font_color, NVG_ALIGN_CENTER,
+                          "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  } else {
+    ui_draw_hud_infobox(s, hud_right_1_x, hud_right_1_y, hud_right_1_w, hud_right_1_h,
+                          "OP Angle", 48, COLOR_GREEN, NVG_ALIGN_CENTER,
+                          value, 80, value_font_color, NVG_ALIGN_CENTER,
+                          "degree", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
+  }
 }
 
 void ui_draw_right_hud_infobox2(UIState *s) {
@@ -268,8 +299,8 @@ void ui_draw_right_hud_infobox2(UIState *s) {
   if(s->scene.car_state.getBrake()>0) {
       snprintf(value, sizeof(value), "%.2f°", s->scene.car_state.getBrake());
       ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                        "User Brake", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                        value, 64, COLOR_RED, NVG_ALIGN_CENTER,
+                        "User Brake", 40, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                        value, 72, COLOR_RED, NVG_ALIGN_CENTER,
                         "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
   } else {
     if(s->scene.car_state.getGas()>0) {
@@ -277,19 +308,19 @@ void ui_draw_right_hud_infobox2(UIState *s) {
       if(s->scene.car_state.getGasPressed()) {
           
           ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                            "User Gas", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                            value, 64, COLOR_GREEN, NVG_ALIGN_CENTER,
+                            "User Gas", 40, COLOR_YELLOW, NVG_ALIGN_CENTER,
+                            value, 72, COLOR_GREEN, NVG_ALIGN_CENTER,
                             "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
       } else {
           ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                            "OP Gas", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                            value, 64, COLOR_GREEN, NVG_ALIGN_CENTER,
+                            "OP Gas", 40, COLOR_GREEN, NVG_ALIGN_CENTER,
+                            value, 72, COLOR_GREEN, NVG_ALIGN_CENTER,
                             "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
       }
     } else {
       ui_draw_hud_infobox(s, hud_right_2_x, hud_right_2_y, hud_right_2_w, hud_right_2_h,
-                            "Gas/Brake", 36, COLOR_WHITE, NVG_ALIGN_CENTER,
-                            "", 64, COLOR_WHITE, NVG_ALIGN_CENTER,
+                            "Gas/Brake", 40, COLOR_WHITE, NVG_ALIGN_CENTER,
+                            "", 72, COLOR_WHITE, NVG_ALIGN_CENTER,
                             "", 48, COLOR_WHITE, NVG_ALIGN_CENTER);
     }
   }
@@ -301,6 +332,7 @@ void ui_draw_right_hud(UIState *s) {
 }
 
 void ui_draw_infotext(UIState *s) {
+#if 0
   int sidebar_fit_x = 0;
   char value[256];
   bool IsVagFulltimeLkaEnabled;
@@ -318,6 +350,7 @@ void ui_draw_infotext(UIState *s) {
   ui_draw_hud_text(s, sidebar_fit_x, 800, value, 80, COLOR_YELLOW);
   snprintf(value, sizeof(value), "CaS.CrS.enabled=%d, CaS.CrS.available=%d", s->scene.car_state.getCruiseState().getEnabled(), s->scene.car_state.getCruiseState().getAvailable());
   ui_draw_hud_text(s, sidebar_fit_x, 900, value, 80, COLOR_YELLOW);
+#endif
 }
 
 void ui_draw_infobar(UIState *s) {
@@ -325,7 +358,7 @@ void ui_draw_infobar(UIState *s) {
   const int y = s->viz_rect.bottom() - hud_infobar_h;
   const int w = s->viz_rect.w;
   const int text_x = w / 2 + x;
-  const int text_y = y + 55;
+  const int text_y = y + 70;
   const bool brakeLights = s->scene.car_state.getBrakeLights();
 
   char infobar[100];
@@ -346,6 +379,7 @@ void ui_draw_infobar(UIState *s) {
   nvgFillColor(s->vg, (brakeLights? COLOR_RED_ALPHA(200) : COLOR_BLACK_ALPHA(150)));
   nvgFill(s->vg);
 
+  nvgFontSize(s->vg, 50);
   nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
   nvgText(s->vg, text_x, text_y, infobar, NULL);
@@ -448,9 +482,9 @@ void ui_draw_hud(UIState *s) {
   read_param(&IsVagDevelopModeEnabled, "IsVagDevelopModeEnabled");
   
   if(IsVagInfoboxEnabled) {
-    ui_draw_top_hud(s);
-    ui_draw_bottom_hud(s);
-    ui_draw_left_hud(s);
+    //ui_draw_top_hud(s);
+    //ui_draw_bottom_hud(s);
+    //ui_draw_left_hud(s);
     ui_draw_right_hud(s);
   }
   if(IsVagDevelopModeEnabled) {
