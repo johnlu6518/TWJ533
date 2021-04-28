@@ -426,6 +426,7 @@ class Controls:
         right_deviation = actuators.steer < 0 and lat_plan.dPathPoints[0] > 0.1
 
         if left_deviation or right_deviation:
+          print("[PONTEST][controlsd.py][state_control()] EventName.steerSaturated !!! !!! !!!")
           self.events.add(EventName.steerSaturated)
 
     return actuators, v_acc_sol, a_acc_sol, lac_log
@@ -472,6 +473,7 @@ class Controls:
       CC.hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
 
     if CC.hudControl.rightLaneDepart or CC.hudControl.leftLaneDepart:
+      print("[PONTEST][controlsd.py][publish_logs()] EventName.ldw !!! !!! !!!")
       self.events.add(EventName.ldw)
 
     clear_event = ET.WARNING if ET.WARNING not in self.current_alert_types else None
@@ -483,10 +485,10 @@ class Controls:
     #Pon Fulltime lka
     params = Params()
     is_vag_fulltime_lka_enabled = True if (params.get("IsVagFulltimeLkaEnabled", encoding='utf8') == "1") else False
-    print("[PONTEST][controlsd.py] bool(CS.cruiseState==CS.cruiseState.available)=", bool(CS.cruiseState==CS.cruiseState.available))
-    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.drive)=", bool(CS.gearShifter==GearShifter.drive))
-    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.sport)=", bool(CS.gearShifter==GearShifter.sport))
-    print("[PONTEST][controlsd.py] bool(CS.gearShifter==GearShifter.manumatic)=", bool(CS.gearShifter==GearShifter.manumatic))
+    print("[PONTEST][controlsd.py][publish_logs()] bool(CS.cruiseState==CS.cruiseState.available)=", bool(CS.cruiseState==CS.cruiseState.available))
+    print("[PONTEST][controlsd.py][publish_logs()] bool(CS.gearShifter==GearShifter.drive)=", bool(CS.gearShifter==GearShifter.drive))
+    print("[PONTEST][controlsd.py][publish_logs()] bool(CS.gearShifter==GearShifter.sport)=", bool(CS.gearShifter==GearShifter.sport))
+    print("[PONTEST][controlsd.py][publish_logs()] bool(CS.gearShifter==GearShifter.manumatic)=", bool(CS.gearShifter==GearShifter.manumatic))
     CC.availableFulltimeLka = bool(CS.cruiseState.available \
                               and bool(is_vag_fulltime_lka_enabled) \
                               and bool(bool(CS.gearShifter==GearShifter.drive) \
