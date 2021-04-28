@@ -31,7 +31,6 @@ class CarState(CarStateBase):
     #ret.standstill = ret.vEgoRaw < 0.1
     ret.standstill = bool(pt_cp.vl["ESP_21"]['ESP_Haltebestaetigung']) and ret.vEgoRaw < 0.001
 
-
     # Update steering angle, rate, yaw rate, and driver input torque. VW send
     # the sign/direction in a separate signal so they must be recombined.
     ret.steeringAngleDeg = pt_cp.vl["LH_EPS_03"]['EPS_Berechneter_LW'] * (1, -1)[int(pt_cp.vl["LH_EPS_03"]['EPS_VZ_BLW'])]
@@ -234,7 +233,7 @@ class CarState(CarStateBase):
                   ("BCM1_Rueckfahrlicht_Schalter", "Gateway_72", 0)]  # Reverse light from BCM
       checks += [("Motor_14", 10)]  # From J623 Engine control module
 
-    #PONTEST
+    #Pon Autodetect J533 or comma camera can
     if CP.networkLocation == NetworkLocation.fwdCamera:
       # Extended CAN devices other than the camera are here on CANBUS.pt
       # TODO: Add bsm checks[] when we have solid autodetection
@@ -253,7 +252,7 @@ class CarState(CarStateBase):
     signals = MqbExtraSignals.lkas_camera[0]
     checks = []
 
-    #PONTEST
+    #Pon Autodetect J533 or comma camera can
     if CP.networkLocation == NetworkLocation.gateway:
       # Extended CAN devices other than the camera are here on CANBUS.cam
       # TODO: Add bsm checks[] when we have solid autodetection
@@ -262,7 +261,7 @@ class CarState(CarStateBase):
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, CANBUS.cam)
 
-#PONTEST
+#Pon Autodetect J533 or comma camera can
 class MqbExtraSignals:
   # Additional signal and message lists to dynamically add for optional or bus-portable controllers
   acc_radar = ([
