@@ -409,7 +409,6 @@ void ui_draw(UIState *s) {
   if(IsVagDevelopModeEnabled) {
     ui_draw_hud(s);
   }
-
 }
 
 void ui_draw_image(const UIState *s, const Rect &r, const char *name, float alpha) {

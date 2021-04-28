@@ -26,6 +26,7 @@ class CarController():
 
     self.steer_rate_limited = False
 
+  #Pon Fulltime lka
   def update(self, enabled, availableFulltimeLka, CS, frame, actuators, visual_alert, audible_alert, leftLaneVisible, rightLaneVisible):
     """ Controls thread """
 

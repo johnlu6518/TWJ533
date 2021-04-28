@@ -369,10 +369,6 @@ void ui_draw_infobar(UIState *s) {
   localtime_r(&rawtime, &timeinfo);
   strftime(date_time, sizeof(date_time),"%D %T", &timeinfo);
   snprintf(infobar, sizeof(infobar), "%s", date_time);
-  //snprintf(infobar, sizeof(infobar), "%s/FP:%s/SteerControl:%u", date_time, s->scene.car_params.getCarFingerprint().cStr() , (unsigned int) s->scene.car_params.getSteerControlType());
-  //snprintf(infobar, sizeof(infobar), "%s/MESpeed:%f/SteerControl:%u/FP:%s", date_time, s->scene.car_params.getMinEnableSpeed() , (unsigned int) s->scene.car_params.getSteerControlType(), s->scene.car_params.getCarFingerprint().cStr());
-
-
 
   nvgBeginPath(s->vg);
   nvgRect(s->vg, x, y, w, hud_infobar_h);
@@ -418,7 +414,7 @@ void ui_draw_blinker(UIState *s) {
 void ui_draw_blindspot(UIState *s) {
   const int y = s->viz_rect.bottom() - hud_blindspot_w;
   const bool leftBlindspot = s->scene.car_state.getLeftBlindspot();
-  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();;
+  const bool rightBlindspot = s->scene.car_state.getRightBlindspot();
 
   if (leftBlindspot) {
     const int left_x = s->viz_rect.x;

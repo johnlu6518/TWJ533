@@ -30,7 +30,6 @@ class CarState(CarStateBase):
     #Pon Fix stop and go acc resume +1
     #ret.standstill = ret.vEgoRaw < 0.1
     ret.standstill = bool(pt_cp.vl["ESP_21"]['ESP_Haltebestaetigung']) and ret.vEgoRaw < 0.001
-    
 
     # Update steering angle, rate, yaw rate, and driver input torque. VW send
     # the sign/direction in a separate signal so they must be recombined.
@@ -262,7 +261,7 @@ class CarState(CarStateBase):
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, CANBUS.cam)
 
-#Pon J533 protocol
+#Pon Autodetect J533 or comma camera can
 class MqbExtraSignals:
   # Additional signal and message lists to dynamically add for optional or bus-portable controllers
   acc_radar = ([

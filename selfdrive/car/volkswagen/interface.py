@@ -14,6 +14,7 @@ class CarInterface(CarInterfaceBase):
     self.displayMetricUnitsPrev = None
     self.buttonStatesPrev = BUTTON_STATES.copy()
 
+    #Pon Autodetect J533 or comma camera can
     # Alias Extended CAN parser to PT/CAM parser, based on detected network location
     self.cp_ext = self.cp if CP.networkLocation == NetworkLocation.fwdCamera else self.cp_cam
 
@@ -46,7 +47,9 @@ class CarInterface(CarInterfaceBase):
         ret.transmissionType = TransmissionType.manual
       cloudlog.info("Detected transmission type: %s", ret.transmissionType)
 
-      if 0xfd in fingerprint[1]:  #True: ESP_21 present on bus 1, we're hooked up at the CAN gateway
+      #Pon Autodetect J533 or comma camera can
+      #ESP_21 present on bus 1, we're hooked up at the CAN gateway
+      if 0xfd in fingerprint[1]:
         ret.networkLocation = NetworkLocation.gateway
       else:  # We're hooked up at the LKAS camera
         ret.networkLocation = NetworkLocation.fwdCamera
@@ -176,6 +179,7 @@ class CarInterface(CarInterfaceBase):
     self.CS.out = ret.as_reader()
     return self.CS.out
 
+  #Pon Fulltime lka
   def apply(self, c):
     can_sends = self.CC.update(c.enabled, c.availableFulltimeLka, self.CS, self.frame, c.actuators,
                    c.hudControl.visualAlert,
