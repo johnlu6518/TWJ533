@@ -25,16 +25,16 @@ def manager_init():
   params.manager_start()
 
   default_params = [
-    ("CommunityFeaturesToggle", "0"),
+    ("CommunityFeaturesToggle", "1"),
     ("EndToEndToggle", "0"),
-    ("CompletedTrainingVersion", "0"),
+    ("CompletedTrainingVersion", "1"),
     ("IsRHD", "0"),
-    ("IsMetric", "0"),
+    ("IsMetric", "1"),
     ("RecordFront", "0"),
-    ("HasAcceptedTerms", "0"),
-    ("HasCompletedSetup", "0"),
+    ("HasAcceptedTerms", "1"),
+    ("HasCompletedSetup", "1"),
     ("IsUploadRawEnabled", "1"),
-    ("IsLdwEnabled", "0"),
+    ("IsLdwEnabled", "1"),
     ("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')),
     ("OpenpilotEnabledToggle", "1"),
     ("VisionRadarToggle", "0"),
