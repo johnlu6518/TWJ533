@@ -263,8 +263,7 @@ void ui_draw_infobar(UIState *s) {
 
   nvgBeginPath(s->vg);
   nvgRect(s->vg, x, y, w, hud_infobar_h);
-  //nvgFillColor(s->vg, (brakeLights? COLOR_RED_ALPHA(200) : COLOR_BLACK_ALPHA(150)));
-  nvgFillColor(s->vg, (brakeLights? COLOR_RED_ALPHA(200) : COLOR_RED_ALPHA(150)));//PONTEST
+  nvgFillColor(s->vg, (brakeLights? COLOR_RED_ALPHA(200) : COLOR_BLACK_ALPHA(150)));
   nvgFill(s->vg);
 
   nvgFontSize(s->vg, 50);
